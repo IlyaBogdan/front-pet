@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Home from '@/sections/home/Home.vue';
-import PersonalCabinet from '@/sections/home/PersonalCabinet.vue';
-import SignIn from '@/sections/home/Auth/SignIn.vue';
-import SignUp from '@/sections/home/Auth/SignUp.vue';
+import Home from '@/pages/home/Home.vue';
+import PersonalCabinet from '@/pages/home/PersonalCabinet.vue';
+import SignIn from '@/pages/home/Auth/SignIn.vue';
+import SignUp from '@/pages/home/Auth/SignUp.vue';
 
-import Chat from '@/sections/chat/Chat.vue';
-import Dialog from '@/sections/chat/Dialog.vue';
+import Chat from '@/pages/chat/Chat.vue';
+import Dialog from '@/pages/chat/Dialog.vue';
 
-import Users from '@/sections/users/Users.vue';
-import UserPage from '@/sections/users/UserPage.vue';
+import Users from '@/pages/users/Users.vue';
+import UserPage from '@/pages/users/UserPage.vue';
 
-import NotFound from '@/sections/NotFoundPage.vue';
+import NotFound from '@/pages/NotFoundPage.vue';
 
 const routes = [
   

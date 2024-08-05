@@ -1,10 +1,10 @@
 <template lang="">
     <footer></footer>
 </template>
-<script>
-export default {
-    name: 'FooterElement'
-}
+<script lang="ts">
+    export default {
+        name: 'FooterElement'
+    }
 </script>
 <style lang="scss">
     

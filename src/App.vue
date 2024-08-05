@@ -10,14 +10,15 @@
   
 </template>
 
-<script>
-  import HeaderElement from "./components/common/Header";
-  import FooterElement from "./components/common/Footer";
-  import NavBar from "./components/common/NavBar";
+<script lang="ts">
+  import { defineComponent } from 'vue';
+  import HeaderElement from "@/components/common/Header.vue";
+  import FooterElement from "@/components/common/Footer.vue";
+  import NavBar from "@/components/common/NavBar.vue";
 
-  export default {
+  export default defineComponent({
     components: { HeaderElement, FooterElement, NavBar }
-  }
+  })
 </script>
 
 <style>

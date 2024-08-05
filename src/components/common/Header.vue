@@ -30,36 +30,37 @@
         </div>
     </header>
 </template>
-<script>
-import { API } from '@/utils/API';
-import LogoFull from "./Logo.vue";
+<script lang="ts">
 
-export default {
-    components: { LogoFull },
-    name: "HeaderElement",
-    methods: {
-        logout() {
-            API.logout()
-                .then(() => {
-                    window.location.href = "/";
-                });
-        },
-        changeLoc(loc) {
-            window.location.href = loc;
-        },
-        openSideBar() {
-            console.log('Open side bar');
-            this.$store.commit('setOpened', true);
-            console.log(this.$store.state.sideBar.opened);
-        }
-    },
-    computed: {
-        userAvatar() {
-            return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
-        }
-    }
-}
+    import { API } from '@/utils/API';
+    import LogoFull from "./Logo.vue";
+    import { defineComponent } from 'vue';
 
+    export default defineComponent({
+        components: { LogoFull },
+        name: "HeaderElement",
+        methods: {
+            logout() {
+                API.logout()
+                    .then(() => {
+                        window.location.href = "/";
+                    });
+            },
+            changeLoc(loc: string) {
+                window.location.href = loc;
+            },
+            openSideBar() {
+                console.log('Open side bar');
+                this.$store.commit('setOpened', true);
+                console.log(this.$store.state.sideBar.opened);
+            }
+        },
+        computed: {
+            userAvatar() {
+                return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
+            }
+        }
+    });
 </script>
 <style lang="scss" scoped>
     header {

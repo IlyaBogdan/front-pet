@@ -1,6 +1,6 @@
 const BACKEND_URL = process.env.VUE_APP_BACKEND_URL_CLIENT;
 
-const request = async (url, params, method) => {
+const request = async (url: string, params: any, method: string) => {
     let headers = {
         'Content-Type': 'application/json'
     };
@@ -39,7 +39,7 @@ export const API = {
      * @param {string} email
      * @param {string} password
      */
-    login(email, password) {
+    login(email: string, password: string) {
         return new Promise((resolve, reject) => {
             request('/auth/login', { email, password }, 'POST')
                 .then((response) => {
@@ -56,7 +56,7 @@ export const API = {
      * Action for registration new user
      * @param { {email: string, password: string, first_name: string, last_name?: string } } data 
      */
-    signUp(data) {
+    signUp(data: any) {
         return new Promise((resolve, reject) => {
             request('/auth/sign-up', data, 'POST')
                 .then((response) => {
@@ -93,7 +93,7 @@ export const API = {
             });
     },
 
-    getUserProfile(userId) {
+    getUserProfile(userId: number) {
         return new Promise((resolve) => {
             request(`/user/${userId}`, {}, 'GET')
                 .then((response) => resolve(response));
@@ -102,9 +102,9 @@ export const API = {
 
     /**
      * Update profile avatar
-     * @param {String} base64_image
+     * @param {string} base64_image
      */
-    updateAvatar(base64_image) {
+    updateAvatar(base64_image: string) {
         return new Promise((resolve, reject) => {
             return request('/user/profile', { avatar: base64_image }, 'POST')
                 .then((response) => resolve(response))
@@ -116,7 +116,7 @@ export const API = {
      * Update profile info
      * @param { {email: string, first_name: string, last_name?: string } } info
      */
-    updateProfile(info) {
+    updateProfile(info: any) {
         return new Promise((resolve, reject) => {
             return request('/user/profile', info, 'POST')
                 .then((response) => resolve(response))
