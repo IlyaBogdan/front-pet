@@ -32,7 +32,7 @@ export abstract class WsConnection
             return WsConnection.instance;
         }
         
-        this.connection = new WebSocket(process.env.VUE_APP_BROKER_CONNECTION);        
+        this.connection = new WebSocket(process.env.VUE_APP_BROKER_CONNECTION!);        
     }
 
     /**

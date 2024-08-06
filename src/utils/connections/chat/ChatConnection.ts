@@ -1,5 +1,6 @@
 import { TBrokerAPIMethod, WsConnection } from "../WsConnection";
 import { ChatInterceptor } from "./ChatInterceptor";
+import { usersOnline } from "./messageHandlers/usersOnline";
 import { chatList } from "./methods/chatList";
 import { createChat } from "./methods/createChat";
 import { createUser } from "./methods/createUser";
