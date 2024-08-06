@@ -26,44 +26,69 @@
     </div>
 </template>
 <script lang="ts">
+
 import { login } from '@/utils/api/auth/login';
+import { ILoginParams } from '@/utils/api/auth/login/dto/request';
 import { Validator } from '@/utils/Validator';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-    data() {
-        return {
-            email: undefined,
-            password: undefined,
-            errors: [],
-            loading: false
-        }
-    },
-    methods: {
-        loginHandle() {
-            const data = this.validate();
 
-            if (!this.errors.length) {
-                this.loading = true;
-                login(data)
-                    .then(() => {
-                        window.location.href = '/personal';
-                    }, (errors) => {
-                        this.errors = errors;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            }
-        },
-        validate() {
-            const data = { email: this.email, password: this.password };
-            this.errors = [];
+    setup() {
+        const email = ref<string | undefined>(undefined);
+        const password = ref<string | undefined>(undefined);
+        const errors = ref<string[]>([]);
+        const loading = ref(false);
+
+        /**
+         * Validate email and password and set errors, if some parameter
+         * is incorrect. Returns login payload
+         * 
+         * @returns {ILoginParams}
+         */
+        const validate = (): ILoginParams => {
+            const data: ILoginParams = { 
+                email: email.value!,
+                password: password.value!
+            };
+
+            errors.value = [];
             const validationResult = Validator.payloadValidation(data);
-            if (Array.isArray(validationResult)) this.errors = this.errors.concat(validationResult);
+            if (Array.isArray(validationResult)) errors.value = errors.value.concat(validationResult);
 
             return data;
         }
+
+        /**
+         * Try login
+         * 
+         * @returns {void}
+         */
+        const loginHandle = (): void => {
+            const data = validate();
+
+            if (!errors.value.length) {
+                loading.value = true;
+                login(data)
+                    .then(() => {
+                        window.location.href = '/personal';
+                    }, (loginErrors) => {
+                        errors.value = loginErrors;
+                    })
+                    .finally(() => {
+                        loading.value = false;
+                    });
+            }
+        };
+
+        return {
+            email,
+            password,
+            errors,
+            loading,
+            validate,
+            loginHandle,
+        };
     }
 });
 </script>

@@ -12,7 +12,7 @@ interface ValidatorMessages {
     [key: string]: any; // Индексная подпись для методов валидатора
   }
   
-  export const Validator: ValidatorType = {
+export const Validator: ValidatorType = {
   
     messages: {
       email: 'Incorrect email format',

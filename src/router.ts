@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Home from '@/pages/home/Home.vue';
-import PersonalCabinet from '@/pages/home/PersonalCabinet.vue';
-import SignIn from '@/pages/home/Auth/SignIn.vue';
-import SignUp from '@/pages/home/Auth/SignUp.vue';
+import PersonalCabinet from '@/pages/personal/PersonalCabinet.vue';
+import SignIn from '@/pages/sign-in/SignIn.vue';
+import SignUp from '@/pages/sign-up/SignUp.vue';
 
 import Chat from '@/pages/chat/Chat.vue';
 import Dialog from '@/pages/chat/Dialog.vue';
