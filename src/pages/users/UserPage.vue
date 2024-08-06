@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-import { API } from '@/utils/request';
+import { getUserProfile } from '@/utils/api/user/profile';
 import imgMixin from '@/mixins/img';
 
 export default {
@@ -45,7 +45,7 @@ export default {
         }
     },
     mounted() {
-        API.getUserProfile(this.$route.params.id)
+        getUserProfile(this.$route.params.id)
             .then(userProfile => this.user = userProfile);
     }
 }

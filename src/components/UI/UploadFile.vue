@@ -11,8 +11,9 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
     name: 'upload-file',
     props: {
         accept: {
@@ -27,7 +28,7 @@ export default {
             this.$emit('selected', event.target.files[0]);
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .input-file {

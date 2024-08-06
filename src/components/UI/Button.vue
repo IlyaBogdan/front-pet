@@ -3,13 +3,15 @@
         <slot></slot>
     </button>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: "button-ui",
     props: {
         type: String
     }
-}
+})
 </script>
 <style lang="scss">
     button {

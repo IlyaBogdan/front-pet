@@ -8,8 +8,10 @@
         />
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     name: "input-ui",
     props: {
         name: String,
@@ -26,21 +28,23 @@ export default {
             default: false
         },
         value: {
-            default: undefined,
+            default: undefined as string | undefined,
         }
     },
     emits: ['update:value'],
     computed: {
         writableValue: {
-            get() {
+            get(): string
+            {
                 return this.value;
             },
-            set(newValue) {
+            set(newValue: string): void
+            {
                 this.$emit('update:value', newValue);
             }
         }
     },
-}
+});
 </script>
 <style lang="scss">
     .input-ui {

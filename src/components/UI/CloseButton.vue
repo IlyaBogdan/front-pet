@@ -5,18 +5,20 @@
         </svg>
     </div>
 </template>
-<script>
+<script lang="ts">
 
+import { defineComponent } from 'vue';
 import Close from '@/assets/close.svg';
 
-export default {
+
+export default defineComponent({
     name: 'close-btn',
     data() {
         return {
             closeImg: Close
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .close-btn {

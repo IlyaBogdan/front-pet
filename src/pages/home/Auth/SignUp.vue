@@ -47,8 +47,8 @@
     </div>
 </template>
 <script>
-import { API } from '@/utils/request.js';
-import { Validator } from '@/utils/Validator.js';
+import { signUp } from '@/utils/api/auth/sign-up';
+import { Validator } from '@/utils/Validator';
 
 export default {
     data() {
@@ -69,7 +69,7 @@ export default {
 
             if (!this.errors.length) {
                 this.loading = true;
-                API.signUp(data)
+                signUp(data)
                     .then(() => {
                         window.location.href = '/personal';
                     }, (errors) => {

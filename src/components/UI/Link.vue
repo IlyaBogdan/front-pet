@@ -3,13 +3,15 @@
         <slot></slot>
     </a>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: "link-ui",
     props: {
         type: String
     }
-}
+});
 </script>
 <style lang="scss">
     a {

@@ -7,4 +7,4 @@ export interface ISignUpResponse {
      * @example '12g7fuhosab60127adas'
      */
     authenticated: string;
-}
+};

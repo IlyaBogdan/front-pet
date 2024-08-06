@@ -8,10 +8,12 @@ import '../styles.scss';
 
 const app = createApp(App);
 
-UI.concat(Common)
-    .forEach((component) => {
-        app.component(component.name, component);
-    });
+const components = [...UI, ...Common];
+
+components.forEach((component) => {
+    //@ts-ignore
+    app.component(component.name, component);
+});
 
 app
     .use(router)

@@ -3,9 +3,10 @@
 
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
     name: 'inline-svg',
     props: {
         src: {
@@ -19,11 +20,11 @@ export default {
         }
     },
     mounted() {
-        fetch(this.src)
-            .then((response) => response.text())
-            .then((svg) => this.$refs.content.innerHTML = svg);
+        //fetch(this.src)
+        //    .then((response) => response.text())
+        //    .then((svg) => this.$refs.content.innerHTML = svg);
     }
-}
+})
 </script>
 <style lang="scss">
 

@@ -44,7 +44,7 @@
 <script>
 import authGuard from '@/mixins/authGuard';
 import imgMixin from '@/mixins/img';
-import { API } from '@/utils/request';
+import { updateProfile } from '@/utils/api/user/profile';
 
 export default {
     name: 'personal-cabinet',
@@ -73,7 +73,7 @@ export default {
             const { first_name, last_name, email } = this.clone;
             const data = { first_name, last_name, email };
             this.loading = true;
-            API.updateProfile(data)
+            updateProfile(data)
                 .then((result) => { 
                     this.user = result;
                     this.$store.commit('setAuthUser', result);
