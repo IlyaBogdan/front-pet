@@ -44,7 +44,7 @@
 <script>
 import authGuard from '@/mixins/authGuard';
 import imgMixin from '@/mixins/img';
-import { API } from '@/utils/API';
+import { API } from '@/utils/request';
 
 export default {
     name: 'personal-cabinet',

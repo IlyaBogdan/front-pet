@@ -47,7 +47,7 @@
     </div>
 </template>
 <script>
-import { API } from '@/utils/API.js';
+import { API } from '@/utils/request.js';
 import { Validator } from '@/utils/Validator.js';
 
 export default {

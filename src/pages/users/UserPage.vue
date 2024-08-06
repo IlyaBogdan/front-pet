@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-import { API } from '@/utils/API';
+import { API } from '@/utils/request';
 import imgMixin from '@/mixins/img';
 
 export default {

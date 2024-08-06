@@ -1,11 +1,12 @@
 const BACKEND_URL = process.env.VUE_APP_BACKEND_URL_CLIENT;
 
-const request = async (url: string, params: any, method: string) => {
+export const request = async (url: string, params: any, method: string) => {
+
     let headers = {
         'Content-Type': 'application/json'
     };
 
-    const initial = {
+    const initial: RequestInit = {
         method,
         headers,
         mode: "cors",
@@ -34,51 +35,7 @@ const request = async (url: string, params: any, method: string) => {
 
 export const API = {
     
-    /**
-     * Login action
-     * @param {string} email
-     * @param {string} password
-     */
-    login(email: string, password: string) {
-        return new Promise((resolve, reject) => {
-            request('/auth/login', { email, password }, 'POST')
-                .then((response) => {
-                    if (response.authenticated) {
-                        localStorage.setItem('apiToken', response.authenticated);
-                        resolve();
-                    } else reject(response.errors)
-                });
-        });
-        
-    },
-
-    /**
-     * Action for registration new user
-     * @param { {email: string, password: string, first_name: string, last_name?: string } } data 
-     */
-    signUp(data: any) {
-        return new Promise((resolve, reject) => {
-            request('/auth/sign-up', data, 'POST')
-                .then((response) => {
-                    if (response.authenticated) {
-                        localStorage.setItem('apiToken', response.authenticated);
-                        resolve();
-                    } else reject(response.errors)
-                });
-        });
-    },
-
-    /**
-     * Logout action
-     */
-    logout() {
-        return request('/auth/logout', {}, 'POST')
-            .then(() => { 
-                localStorage.removeItem('apiToken');
-                localStorage.removeItem('user');
-            });
-    },
-
+    
     /**
      * Return info about logined user
      */

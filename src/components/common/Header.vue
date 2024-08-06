@@ -32,7 +32,7 @@
 </template>
 <script lang="ts">
 
-    import { API } from '@/utils/API';
+    import { API } from '@/utils/request';
     import LogoFull from "./Logo.vue";
     import { defineComponent } from 'vue';
 
