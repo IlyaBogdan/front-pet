@@ -66,7 +66,7 @@ export default defineComponent({
     watch: {
         edit() {
             if (this.edit) {
-                this.clone = Object.assign({}, this.user);
+                this.clone = { ...this.user };
             }
         },
     },  

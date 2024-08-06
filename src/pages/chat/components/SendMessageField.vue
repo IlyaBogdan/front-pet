@@ -33,7 +33,7 @@
 import Attachment from '@/assets/attachment.svg';
 import Emoji from '@/assets/emoji.svg';
 import Photo from '@/assets/photo.svg';
-import SendIcon from '@/assets/send-icon.svg?inline';
+import SendIcon from '@/assets/send-icon.svg';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -57,9 +57,9 @@ export default defineComponent({
             }
         },
         mounted() {
-            const tx = this.$refs("textArea");
+            const tx = this.$refs.textArea as HTMLElement;
 
-            tx.setAttribute("style", "height:" + (tx[0].scrollHeight) + "px;overflow-y:hidden;");
+            tx.setAttribute("style", "height:" + (tx.scrollHeight) + "px;overflow-y:hidden;");
             tx.addEventListener("input", function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + "px";
