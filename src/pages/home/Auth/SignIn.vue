@@ -26,8 +26,8 @@
     </div>
 </template>
 <script>
-import { API } from '@/utils/request.js';
-import { Validator } from '@/utils/Validator.js';
+import { login } from '@/utils/api/auth/login';
+import { Validator } from '@/utils/Validator';
 
 export default {
     data() {
@@ -44,7 +44,7 @@ export default {
 
             if (!this.errors.length) {
                 this.loading = true;
-                API.login(data.email, data.password)
+                login(data)
                     .then(() => {
                         window.location.href = '/personal';
                     }, (errors) => {

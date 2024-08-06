@@ -32,7 +32,7 @@
 </template>
 <script lang="ts">
 
-    import { API } from '@/utils/request';
+    import { logout } from "@/utils/api/auth/logout";
     import LogoFull from "./Logo.vue";
     import { defineComponent } from 'vue';
 
@@ -41,7 +41,7 @@
         name: "HeaderElement",
         methods: {
             logout() {
-                API.logout()
+                logout()
                     .then(() => {
                         window.location.href = "/";
                     });

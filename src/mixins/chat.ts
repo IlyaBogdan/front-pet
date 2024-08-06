@@ -1,47 +1,86 @@
-import { ChatConnection } from "@/utils/connections/chat/ChatConnection.js";
+import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
+import { IUser } from "@/models/IUser";
+import { IChat } from "@/models/IChat";
+import { IChatInfo } from "@/models/IChatInfo";
+import { IMessage } from "@/models/IMessage";
+import { defineComponent, ref, onMounted } from "vue";
+import { useStore } from "vuex";
 
-export default {
-    data() {
-        return {
-            connection: undefined,
-            user: undefined
+export default defineComponent({
+  setup() {
+    const store = useStore();
+    const connection = ref<ChatConnection | undefined>(undefined);
+    const user = ref<IUser | undefined>(undefined);
+    const online = ref(false);
+
+    user.value = store.state.authModule.user;
+
+    const interceptConnection = () => {
+      connection.value = new ChatConnection().intercept();
+      if (connection.value) {
+        connection.value.onOpen(() => {
+          online.value = true;
+          const apiToken = localStorage.getItem("apiToken");
+          if (apiToken) {
+            connection.value!.call("pull", { token: apiToken });
+          }
+        }).onClose(() => {
+          online.value = false;
+        });
+      }
+    };
+
+    onMounted(interceptConnection);
+
+    const sendMessage = (message: IMessage) => {
+      if (user.value && connection.value) {
+        message.user = user.value;
+        connection.value.call("sendMessage", message);
+      }
+    };
+
+    const convertChatInfo = (chat: IChat): IChatInfo => {
+      const chatInfo: IChatInfo = {
+        id: "",
+        title: "",
+        avatar: "",
+        shortName: "",
+        // typing: false,
+        // online: false
+      };
+      if (chat.type === 0) {
+        const opponent = chat.users.filter(
+          (chatUser) => chatUser.id !== user.value?.id
+        )[0];
+        if (opponent) {
+          chatInfo.id = opponent.id;
+          chatInfo.title = `${opponent.first_name} ${opponent.last_name}`;
+          chatInfo.avatar = staticUrl(opponent.avatar);
+          // chatInfo.typing = this.typingUsers.indexOf(opponent.id) !== -1;
+          chatInfo.shortName = opponent.first_name;
+          // chatInfo.online = this.chat.online.indexOf(opponent.id) !== -1;
+
+          // this.connection.call('getOnlineUsers', { users: [opponent.id] });
         }
-    },
-    mounted() {
-        this.user = this.$store.state.authModule.user;
-        this.connection = new ChatConnection().intercept(this);
-        this.connection.onOpen(() => {
-            this.online = true;
-            this.connection.call('pull', { token: localStorage.getItem('apiToken') });
-        })
-        .onClose(() => {
-            this.online = false;
-        })
-    },
-    methods: {
-        sendMessage(message) {
-            message.user = this.user;
-            this.connection.call('sendMessage', message);
-        },
-        convertChatInfo(chat) {
-            let chatInfo = {};
-            if (chat.type == 0) {
-                const oponent = chat.users.filter((user) => user.id != this.user.id)[0];
-                chatInfo.id = oponent.id;
-                chatInfo.title = `${oponent.first_name} ${oponent.last_name}`;
-                chatInfo.avatar = this.staticUrl(oponent.avatar);
-                //chatInfo.typing = this.typingUsers.indexOf(oponent.id) != -1;
-                chatInfo.shortName = oponent.first_name;
-                //chatInfo.online = this.chat.online.indexOf(oponent.id) != -1;
+      } else if (chat.type === 1) {
+        chatInfo.title = "chat";
+        // @ts-ignore
+        chatInfo.avatar = this.avatar; // Обработай avatar более корректно
+      }
+      return chatInfo;
+    };
 
-                //this.connection.call('getOnlineUsers', { users: [oponent.id] });
-            }
-            if (chat.type == 1) {
-                chatInfo.title = 'chat';
-                chatInfo.avatar = this.avatar;
-            } 
+    const staticUrl = (avatar: string): string => {
+      return `https://example.com/static/${avatar}`;
+    };
 
-            return chatInfo;
-        }
-    }
-}
+    return {
+      connection,
+      user,
+      online,
+      sendMessage,
+      convertChatInfo,
+      staticUrl
+    };
+  }
+});

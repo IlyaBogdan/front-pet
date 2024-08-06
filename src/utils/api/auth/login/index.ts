@@ -3,7 +3,7 @@ import { ILoginParams } from "./dto/request";
 import { ILoginResponse } from "./dto/response";
 
 /**
- * Action for registration new user
+ * Action for login user
  * 
  * @param { ISignUpParams } data
  * @returns {Promise<ISignUpResponse>}
