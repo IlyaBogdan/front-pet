@@ -1,4 +1,4 @@
-import { request } from "@/utils/request";
+import { ESupportedMethods, request } from "@/utils/request";
 import { ISignUpParams } from "./dto/request";
 import { ISignUpResponse } from "./dto/response";
 
@@ -10,7 +10,7 @@ import { ISignUpResponse } from "./dto/response";
  */
 export const signUp = async (data: ISignUpParams): Promise<ISignUpResponse> => {
 
-    const response = await request('/auth/sign-up', data, 'POST');
+    const response = await request('/auth/sign-up', data, ESupportedMethods.POST);
 
     if (response.authenticated) {
         localStorage.setItem('apiToken', response.authenticated);

@@ -1,6 +1,14 @@
-const BACKEND_URL = process.env.VUE_APP_BACKEND_URL_CLIENT;
+export const BACKEND_URL = process.env.VUE_APP_BACKEND_URL_CLIENT;
 
-export const request = async (url: string, params: any, method: string) => {
+export enum ESupportedMethods {
+    GET = 'GET',
+    POST = 'POST',
+    DELETE = 'DELETE',
+    PUT = 'PUT',
+    PATCH = 'PATCH'
+}
+
+export const request = async (url: string, params: any, method: ESupportedMethods) => {
 
     const headers: Headers = new Headers();
     headers.set('Content-Type', 'application/json');
@@ -15,7 +23,7 @@ export const request = async (url: string, params: any, method: string) => {
         credentials: "include"
     }
 
-    if (method != 'GET' && method != 'HEAD') initial.body = JSON.stringify(params);
+    if (method != ESupportedMethods.GET) initial.body = JSON.stringify(params);
 
     return fetch(`${BACKEND_URL}${url}`, initial).then(async (response) => { 
         if (response.ok) return response.json();

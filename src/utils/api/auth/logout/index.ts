@@ -1,4 +1,4 @@
-import { request } from "@/utils/request";
+import { ESupportedMethods, request } from "@/utils/request";
 import { ILogoutResponse } from "./dto/response";
 
 /**
@@ -8,7 +8,7 @@ import { ILogoutResponse } from "./dto/response";
  */
 export const logout = async (): Promise<ILogoutResponse> => {
 
-    const response = await request('/auth/logout', {}, 'POST');
+    const response = await request('/auth/logout', {}, ESupportedMethods.POST);
     localStorage.removeItem('apiToken');
     localStorage.removeItem('user');
 

@@ -1,4 +1,4 @@
-import { request } from "@/utils/request";
+import { ESupportedMethods, request } from "@/utils/request";
 import { IProfileRequestParams } from "./dto/request";
 import { IProfileRequestResponse, IUserProfileInfo } from "./dto/response";
 
@@ -9,7 +9,7 @@ import { IProfileRequestResponse, IUserProfileInfo } from "./dto/response";
  */
 export const updateProfile = async (params: IProfileRequestParams): Promise<IProfileRequestResponse> => {
 
-    const response = await request('/user/profile', params, 'POST');
+    const response = await request('/user/profile', params, ESupportedMethods.POST);
     
     return response;
 };
@@ -20,7 +20,7 @@ export const updateProfile = async (params: IProfileRequestParams): Promise<IPro
  * @returns {IUserProfileInfo}
  */
 export const getAuthUserInfo = async (): Promise<IUserProfileInfo> => {
-    const response = await request('/user', {}, 'GET');
+    const response = await request('/user', {}, ESupportedMethods.GET);
     localStorage.setItem('user', JSON.stringify(response));
 
     return response;
@@ -34,6 +34,6 @@ export const getAuthUserInfo = async (): Promise<IUserProfileInfo> => {
  */
 export const getUserProfile = async (userId: number): Promise<IUserProfileInfo> => {
 
-    const response = await request(`/user/${userId}`, {}, 'GET');
+    const response = await request(`/user/${userId}`, {}, ESupportedMethods.GET);
     return response;
 };
