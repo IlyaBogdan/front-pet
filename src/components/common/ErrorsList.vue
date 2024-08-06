@@ -5,8 +5,11 @@
         </div>
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: "errors-list",
     props: {
         errors: {
@@ -16,7 +19,8 @@ export default {
             }
         }
     }
-}
+});
+
 </script>
 <style lang="scss" scoped>
     .errors {

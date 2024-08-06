@@ -41,12 +41,14 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import authGuard from '@/mixins/authGuard';
 import imgMixin from '@/mixins/img';
+import { defineComponent } from 'vue';
+import { getAuthUserInfo } from '@/utils/api/user/profile';
 import { updateProfile } from '@/utils/api/user/profile';
 
-export default {
+export default defineComponent({
     name: 'personal-cabinet',
     mixins: [authGuard, imgMixin],
     data() {
@@ -90,10 +92,10 @@ export default {
             if (avatar) reader.readAsDataURL(avatar);
         },
         updateAvatar() {
-            API.updateAvatar(this.avatar);
+            updateProfile({ avatar: this.avatar});
         },
         getUser() {
-            API.getAuthUserInfo()
+            getAuthUserInfo()
                 .then((response) => {
                     this.$store.commit('setAuthUser', response);
                 })
@@ -111,7 +113,7 @@ export default {
             return this.avatar ?? this.staticUrl(this.user.avatar);
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .personal {

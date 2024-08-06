@@ -32,35 +32,36 @@
 </template>
 <script lang="ts">
 
-    import { logout } from "@/utils/api/auth/logout";
-    import LogoFull from "./Logo.vue";
-    import { defineComponent } from 'vue';
+import { logout } from "@/utils/api/auth/logout";
+import LogoFull from "./Logo.vue";
+import { defineComponent } from 'vue';
 
-    export default defineComponent({
-        components: { LogoFull },
-        name: "HeaderElement",
-        methods: {
-            logout() {
-                logout()
-                    .then(() => {
-                        window.location.href = "/";
-                    });
-            },
-            changeLoc(loc: string) {
-                window.location.href = loc;
-            },
-            openSideBar() {
-                console.log('Open side bar');
-                this.$store.commit('setOpened', true);
-                console.log(this.$store.state.sideBar.opened);
-            }
+export default defineComponent({
+    components: { LogoFull },
+    name: "HeaderElement",
+    methods: {
+        logout() {
+            logout()
+                .then(() => {
+                    window.location.href = "/";
+                });
         },
-        computed: {
-            userAvatar() {
-                return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
-            }
+        changeLoc(loc: string) {
+            window.location.href = loc;
+        },
+        openSideBar() {
+            console.log('Open side bar');
+            this.$store.commit('setOpened', true);
+            console.log(this.$store.state.sideBar.opened);
         }
-    });
+    },
+    computed: {
+        userAvatar() {
+            return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
+        }
+    }
+});
+
 </script>
 <style lang="scss" scoped>
     header {

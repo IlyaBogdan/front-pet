@@ -4,18 +4,20 @@
         <div class="title">CockSender</div>
     </div>
 </template>
-<script>
+<script lang="ts">
 
 import Logo from '@/assets/logo.jpg';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: "logo-full",
     data() {
         return {
             logo: Logo
         }
     }
-}
+});
+
 </script>
 <style lang="scss">
     .logo {

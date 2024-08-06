@@ -46,11 +46,12 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import { signUp } from '@/utils/api/auth/sign-up';
 import { Validator } from '@/utils/Validator';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     data() {
         return {
             email: undefined,
@@ -95,7 +96,7 @@ export default {
             return data;
         }
     }
-}
+});
 </script>
 <style lang="scss" scoped>
     .sign-up {

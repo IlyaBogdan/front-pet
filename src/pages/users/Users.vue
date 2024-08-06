@@ -17,11 +17,12 @@
         no users
     </div>
 </template>
-<script>
+<script lang="ts">
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: 'users-list',
     mixins: [ chatMixin, imgMixin ],
     data() {
@@ -37,7 +38,7 @@ export default {
     mounted() {
         this.connection.call('getUsers', { user: this.user});
     },
-}
+});
 </script>
 <style lang="scss">
     .user-list {

@@ -10,23 +10,23 @@
 </template>
 <script lang="ts">
 
-    import { defineComponent } from "vue";
-    import LogoFull from "./Logo.vue";
+import { defineComponent } from "vue";
+import LogoFull from "./Logo.vue";
 
-    export default defineComponent({
-        components: { LogoFull },
-        methods: {
-            close() {
-                this.$store.commit('setOpened', false);
-                console.log(this.$store.state.sideBar.opened);
-            }
-        },
-        computed: {
-            opened(): boolean {
-                return this.$store.state.sideBar.opened;
-            }
+export default defineComponent({
+    components: { LogoFull },
+    methods: {
+        close() {
+            this.$store.commit('setOpened', false);
+            console.log(this.$store.state.sideBar.opened);
         }
-    });
+    },
+    computed: {
+        opened(): boolean {
+            return this.$store.state.sideBar.opened;
+        }
+    }
+});
     
 </script>
 <style lang="scss">

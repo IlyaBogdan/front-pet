@@ -2,9 +2,13 @@
     <footer></footer>
 </template>
 <script lang="ts">
-    export default {
-        name: 'FooterElement'
-    }
+
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+    name: 'FooterElement'
+});
+
 </script>
 <style lang="scss">
     

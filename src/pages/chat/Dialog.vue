@@ -26,19 +26,20 @@
         />
     </div>
 </template>
-<script>
+<script lang="ts">
 /**
  * TODO
  * 1) Groping messages by date like VK
  * 2) Show, if other user typing message
  */
 
+import { defineComponent } from 'vue';
 import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
 
-export default {
+export default defineComponent({
     components: { DialogMessage, SendMessageField },
     mixins: [ chatMixin, imgMixin ],
     name: "chat-dialog",
@@ -130,7 +131,7 @@ export default {
             return {};
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .dialog {

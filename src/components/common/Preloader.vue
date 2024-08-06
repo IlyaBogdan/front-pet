@@ -1,14 +1,18 @@
 <template>
-    <dialog id="preloader" class="loader">
-    </dialog>
+    <dialog id="preloader" class="loader"></dialog>
 </template>
-<script>
-export default {
+<script lang="ts">
+
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: 'pre-loader',
     mounted() {
-        document.getElementById('preloader').showModal();
+        const element = document.getElementById('preloader')! as HTMLDialogElement;
+        element.showModal();
     }
-}
+});
+
 </script>
 <style lang="scss" scoped>
     .loader {       

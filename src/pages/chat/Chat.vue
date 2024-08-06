@@ -15,7 +15,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 /**
  * TODO
  * 1) Open chat whit other users by link
@@ -24,8 +24,9 @@
 
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     components: {  },
     mixins: [ chatMixin, imgMixin ],
     name: "chat-element",
@@ -43,7 +44,7 @@ export default {
             window.history.replaceState({}, '', url);
         },            
     }
-}
+});
 </script>
 
 <style lang="scss">

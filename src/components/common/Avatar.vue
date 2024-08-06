@@ -9,9 +9,12 @@
     </div>
     
 </template>
-<script>
+<script lang="ts">
+
 import noIcon from '@/assets/no-icon.png';
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     name: 'avatar-icon',
     props: {
         avatar: {
@@ -28,7 +31,8 @@ export default {
             return this.avatar != '' ? this.avatar : noIcon;
         }
     }
-}
+});
+
 </script>
 <style lang="scss" scoped>
     .avatar {

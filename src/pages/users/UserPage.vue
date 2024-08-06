@@ -26,11 +26,12 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import { getUserProfile } from '@/utils/api/user/profile';
 import imgMixin from '@/mixins/img';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: 'user-page',
     mixins: [ imgMixin ],
     data() {
@@ -48,7 +49,7 @@ export default {
         getUserProfile(this.$route.params.id)
             .then(userProfile => this.user = userProfile);
     }
-}
+});
 </script>
 <style lang="scss">
     .user {

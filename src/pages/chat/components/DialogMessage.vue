@@ -10,10 +10,11 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
 import imgMixin from '@/mixins/img';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: "dialog-message",
     mixins: [imgMixin],
     props: {
@@ -41,7 +42,7 @@ export default {
             });
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .dialog-message {

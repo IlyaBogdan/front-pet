@@ -29,13 +29,14 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import Attachment from '@/assets/attachment.svg';
 import Emoji from '@/assets/emoji.svg';
 import Photo from '@/assets/photo.svg';
 import SendIcon from '@/assets/send-icon.svg?inline';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     name: "send-message-field",
     data() {
         return {
@@ -65,7 +66,7 @@ export default {
             }, false);
         }
     }
-}
+});
 </script>
 <style lang="scss">
     .send-message {
