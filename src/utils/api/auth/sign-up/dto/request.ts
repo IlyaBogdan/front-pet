@@ -25,4 +25,4 @@ export interface ISignUpParams {
      * @example 'Snow'
      */
     last_name: string;
-}
+};
