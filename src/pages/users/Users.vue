@@ -18,27 +18,38 @@
     </div>
 </template>
 <script lang="ts">
+
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
-import { defineComponent } from 'vue';
+import { IUser } from '@/models/IUser';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
     name: 'users-list',
     mixins: [ chatMixin, imgMixin ],
-    data() {
-        return {
-            userList: [],
-        }
-    },  
-    methods: {
-        username(user) {
+
+    setup() {
+        const userList = ref<IUser[]>([]);
+
+        /**
+         * Return concatinated username
+         * 
+         * @param {IUser} user user information
+         * @returns {string} concatinated first name and last name  
+         */
+        const username = (user: IUser): string => {
             return `${user.first_name} ${user.last_name}`;
         }
-    },
-    mounted() {
-        this.connection.call('getUsers', { user: this.user});
-    },
+
+        chatMixin.connection.call('getUsers', { user: chatMixin.user });
+
+        return {
+            userList,
+            username
+        }
+    }
 });
+
 </script>
 <style lang="scss">
     .user-list {

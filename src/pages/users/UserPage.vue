@@ -27,29 +27,35 @@
     </div>
 </template>
 <script lang="ts">
+
 import { getUserProfile } from '@/utils/api/user/profile';
 import imgMixin from '@/mixins/img';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { IUser } from '@/models/IUser';
+import { IUserProfileInfo } from '@/utils/api/user/profile/dto/response';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
     name: 'user-page',
-    mixins: [ imgMixin ],
-    data() {
-        return {
-            user: undefined,
-            status: 'online'
-        }
-    },
-    methods: {
-        getUserProfile() {
+    mixins: [imgMixin],
 
+    setup() {
+        
+        const route = useRoute();
+        const user = ref<IUser | undefined>(undefined);
+        const status = ref<string>('online');
+
+        const userId: number = parseInt(route.params.id as string)
+        getUserProfile(userId)
+            .then((userProfile: IUserProfileInfo) => user.value = userProfile as IUser);
+
+        return {
+            user,
+            status
         }
-    },
-    mounted() {
-        getUserProfile(this.$route.params.id)
-            .then(userProfile => this.user = userProfile);
     }
 });
+
 </script>
 <style lang="scss">
     .user {

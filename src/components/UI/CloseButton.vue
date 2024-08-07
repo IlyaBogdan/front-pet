@@ -7,15 +7,17 @@
 </template>
 <script lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Close from '@/assets/close.svg';
-
 
 export default defineComponent({
     name: 'close-btn',
-    data() {
+
+    setup() {
+        const closeImg = ref(Close);
+
         return {
-            closeImg: Close
+            closeImg
         }
     }
 });
