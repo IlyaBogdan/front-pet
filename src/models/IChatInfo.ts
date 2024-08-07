@@ -1,6 +1,6 @@
 
 export interface IChatInfo {
-    id: string;
+    id: number;
     title: string;
     avatar: string;
     shortName: string;

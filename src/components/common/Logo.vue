@@ -7,13 +7,15 @@
 <script lang="ts">
 
 import Logo from '@/assets/logo.jpg';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
     name: "logo-full",
-    data() {
+    setup() {
+        const logo = ref(Logo);
+
         return {
-            logo: Logo
+            logo
         }
     }
 });

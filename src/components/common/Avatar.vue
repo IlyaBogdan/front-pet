@@ -12,23 +12,26 @@
 <script lang="ts">
 
 import noIcon from '@/assets/no-icon.png';
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+
+interface IAvatarProps {
+    avatar: string;
+    online: boolean;
+}
 
 export default defineComponent({
     name: 'avatar-icon',
-    props: {
-        avatar: {
-            type: String,
-            default: ''
-        },
-        online: {
-            type: Boolean,
-            default: () => { return false }
-        }
-    },
-    computed: {
-        getAvatar() {
-            return this.avatar != '' ? this.avatar : noIcon;
+    setup(props: IAvatarProps) {
+        const online = ref(props.online);
+        const avatar = ref(props.avatar);
+        const getAvatar = computed(() => {
+            return avatar.value != '' ? avatar.value : noIcon;
+        });
+
+        return {
+            getAvatar,
+            avatar,
+            online
         }
     }
 });

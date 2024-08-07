@@ -81,7 +81,7 @@ export default defineComponent({
          * @returns {string}
          */
         const avatarImage = computed(() => {
-            return avatar.value ?? imgMixin.methods!.staticUrl(user.value?.avatar);
+            return avatar.value ?? imgMixin.staticUrl(user.value?.avatar);
         });
 
         watch(edit, (newEditValue) => {

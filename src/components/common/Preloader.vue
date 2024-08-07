@@ -3,13 +3,20 @@
 </template>
 <script lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+
+interface HTMLDialogElementExtended extends HTMLDialogElement {
+  showModal: () => void;
+  close: () => void;
+}
 
 export default defineComponent({
     name: 'pre-loader',
-    mounted() {
-        const element = document.getElementById('preloader')! as HTMLDialogElement;
-        element.showModal();
+    setup() {
+        onMounted(() => {
+            const element = document.getElementById('preloader')! as HTMLDialogElementExtended;
+            element.showModal();
+        });
     }
 });
 

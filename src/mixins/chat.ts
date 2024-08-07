@@ -41,7 +41,7 @@ export default defineComponent({
 
     const convertChatInfo = (chat: IChat): IChatInfo => {
       const chatInfo: IChatInfo = {
-        id: "",
+        id: 0,
         title: "",
         avatar: "",
         shortName: "",

@@ -10,20 +10,27 @@
 </template>
 <script lang="ts">
 
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import LogoFull from "./Logo.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
     components: { LogoFull },
-    methods: {
-        close() {
-            this.$store.commit('setOpened', false);
-            console.log(this.$store.state.sideBar.opened);
+    setup() {
+        const store = useStore();
+
+        const opened = computed(() => {
+            return store.state.sideBar.opened;
+        });
+
+        const close = () => {
+            store.commit('setOpened', false);
+            console.log(store.state.sideBar.opened);
         }
-    },
-    computed: {
-        opened(): boolean {
-            return this.$store.state.sideBar.opened;
+
+        return {
+            close,
+            opened
         }
     }
 });

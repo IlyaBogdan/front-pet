@@ -20,16 +20,14 @@
 <script lang="ts">
 
 import chatMixin from '@/mixins/chat';
-import imgMixin from '@/mixins/img';
 import { IUser } from '@/models/IUser';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
     name: 'users-list',
-    mixins: [ chatMixin, imgMixin ],
 
     setup() {
-        const userList = ref<IUser[]>([]);
+        const userList = ref<Array<IUser>>([]);
 
         /**
          * Return concatinated username
@@ -39,7 +37,7 @@ export default defineComponent({
          */
         const username = (user: IUser): string => {
             return `${user.first_name} ${user.last_name}`;
-        }
+        };
 
         chatMixin.connection.call('getUsers', { user: chatMixin.user });
 

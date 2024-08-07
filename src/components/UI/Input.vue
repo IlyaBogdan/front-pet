@@ -8,7 +8,7 @@
         />
     </div>
 </template>
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -28,17 +28,18 @@ export default defineComponent({
             default: false
         },
         value: {
-            default: undefined as string | undefined,
+            type: String,
+            default: '',
         }
     },
     emits: ['update:value'],
     computed: {
         writableValue: {
-            get(): string
+            get()
             {
                 return this.value;
             },
-            set(newValue: string): void
+            set(newValue)
             {
                 this.$emit('update:value', newValue);
             }

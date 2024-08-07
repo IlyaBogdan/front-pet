@@ -27,7 +27,7 @@ interface IDialogMessageProps {
      * Next author in dialog
      */
     next: IUser | undefined
-};
+}
 
 interface IDialogMessageProperties extends IMessage {
     /**

@@ -1,7 +1,11 @@
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
-    mounted() {
-        if (!this.$store.state.authModule.authenticated) window.location.href = '/sign-in';
-    },
+    setup() {
+        const store = useStore();
+        onMounted(() => {
+            if (!store.state.authModule.authenticated) window.location.href = '/sign-in';
+        });
+    }
 });

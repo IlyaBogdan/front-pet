@@ -1,15 +1,17 @@
 import noIcon from '@/assets/no-icon.png';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-    data() {
-        return {
-            avatar: noIcon
-        }
-    },
-    methods: {
-        staticUrl(relationUrl: string) {
+    setup() {
+        const avatar = ref(noIcon);
+
+        const staticUrl = (relationUrl: string) => {
             return relationUrl ? `${process.env.VUE_APP_BACKEND_PUBLIC}/${relationUrl}` : '';
+        };
+
+        return {
+            avatar,
+            staticUrl
         }
-    },
+    }
 });
