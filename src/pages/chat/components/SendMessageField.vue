@@ -34,36 +34,43 @@ import Attachment from '@/assets/attachment.svg';
 import Emoji from '@/assets/emoji.svg';
 import Photo from '@/assets/photo.svg';
 import SendIcon from '@/assets/send-icon.svg';
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
     name: "send-message-field",
-    data() {
-        return {
-            message: '',
-            typing: false,
-            attachment: Attachment,
-            emoji: Emoji,
-            photo: Photo,
-            sendIcon: SendIcon
-        }
-    },
-    methods: {
-        send() {
-            if (this.message.length) {
-                this.$emit('sendMessage', this.message);
-                this.$emit('typing', false);
-                this.message = '';
-            }
-        },
-        mounted() {
-            const tx = this.$refs.textArea as HTMLElement;
+    setup(props, { emit }) {
+        const message = ref('');
+        const typing = ref(false);
+        const attachment = ref(Attachment);
+        const emoji = ref(Emoji);
+        const photo = ref(Photo);
+        const sendIcon = ref(SendIcon);
+        const textArea = ref<HTMLElement | null>(null);
 
-            tx.setAttribute("style", "height:" + (tx.scrollHeight) + "px;overflow-y:hidden;");
-            tx.addEventListener("input", function() {
+        onMounted(() => {
+            textArea.value!.setAttribute("style", "height:" + (textArea.value!.scrollHeight) + "px;overflow-y:hidden;");
+            textArea.value!.addEventListener("input", function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + "px";
             }, false);
+        });
+
+        const send = () => {
+            if (message.value.length) {
+                emit('sendMessage', message.value);
+                emit('typing', false);
+                message.value = '';
+            }
+        };
+
+        return {
+            message,
+            typing,
+            attachment,
+            emoji,
+            photo,
+            sendIcon,
+            send
         }
     }
 });

@@ -1,48 +1,84 @@
 <template>
-    <div class="dialog-message" :class="{ grouped: nextUserIsEqual() }" :data-destination="message.type">
+    <div class="dialog-message" :class="{ grouped: nextUserIsEqual() }" :data-destination="message!.type">
         <div class="dialog-message__content">
             <div class="text-wrapper" v-html="content"></div>
-            <div class="dialog-message__date">{{ messageDate(message.date) }}</div>
+            <div class="dialog-message__date">{{ messageDate(message!.date) }}</div>
             <div v-if="!nextUserIsEqual()" class="triangle"></div>
         </div>
         <div v-if="!nextUserIsEqual()" class="dialog-message__author">
-            <avatar-icon :avatar="staticUrl(message.user?.avatar)"/>
+            <avatar-icon :avatar="staticUrl(message!.user!.avatar)"/>
         </div>
     </div>
 </template>
 <script lang="ts">
 import imgMixin from '@/mixins/img';
-import { defineComponent } from 'vue';
+import { IMessage } from '@/models/IMessage';
+import { IUser } from '@/models/IUser';
+import { computed, defineComponent, onMounted, ref } from 'vue';
+
+interface IDialogMessageProps {
+
+    /**
+     * Message info
+     */
+    message: IMessage,
+
+    /**
+     * Next author in dialog
+     */
+    next: IUser | undefined
+};
+
+interface IDialogMessageProperties extends IMessage {
+    /**
+     * Message direction
+     */
+    type: 'in' | 'out'
+}
 
 export default defineComponent({
     name: "dialog-message",
     mixins: [imgMixin],
-    props: {
-        message: Object,
-        next: Object
-    },
-    methods: {
-        messageDate(date) {
-            // TODO: add timezones
-            date = new Date(date.date);
-            const hours = `${date.getHours()}`.length == 1 ? `0${date.getHours()}` : `${date.getHours()}`;
-            const minutes = `${date.getMinutes()}`.length == 1 ? `0${date.getMinutes()}` : `${date.getMinutes()}`;
-            return `${hours}:${minutes}`;
-        },
-        nextUserIsEqual() {
-            return this.next && this.next.id === this.message.user.id;
-        }
-    },
-    computed: {
-        content() {
-            const message = this.message.message;
+    setup(props: IDialogMessageProps) {
+
+        const message = ref<IDialogMessageProperties | null>(null);
+        const nextAuthor = ref<IUser | undefined>(props.next);
+
+        onMounted(() => {
+            const type = nextUserIsEqual() ? 'out' : 'in';
+            message.value = { ...props.message, type };
+        })
+
+        const content = computed(() => {
+            const messageContent = message.value!.message;
             const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
-            return message.replace(urlRegex, function(url) {
+            return messageContent.replace(urlRegex, function(url) {
                 return '<a href="' + url + '">' + url + '</a>';
             });
+        });
+
+        const messageDate = (date: Date | string) => {
+            // TODO: add timezones
+            const messageDate = new Date(date);
+            const hours = `${messageDate.getHours()}`.length == 1 ? `0${messageDate.getHours()}` : `${messageDate.getHours()}`;
+            const minutes = `${messageDate.getMinutes()}`.length == 1 ? `0${messageDate.getMinutes()}` : `${messageDate.getMinutes()}`;
+            return `${hours}:${minutes}`;
+        };
+
+        const nextUserIsEqual = () => {
+            return nextAuthor.value && nextAuthor.value.id === message.value!.user!.id;
+        }
+
+        return {
+            message,
+            nextAuthor,
+            content,
+            messageDate,
+            nextUserIsEqual
         }
     }
 });
+
 </script>
 <style lang="scss">
     .dialog-message {

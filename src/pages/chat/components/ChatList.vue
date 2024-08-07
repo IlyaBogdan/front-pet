@@ -10,13 +10,24 @@
     </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { IUser } from '@/models/IUser';
+import { defineComponent, ref } from 'vue';
+
+interface IChatListProps {
+    /**
+     * List of users
+     */
+    users: IUser[]
+}
 
 export default defineComponent({
     name: "chat-list",
-    props: {
-        users: {
-            type: Array
+
+    setup(props: IChatListProps) {
+        const users = ref<IUser[]>(props.users);
+        
+        return {
+            users
         }
     }
 });

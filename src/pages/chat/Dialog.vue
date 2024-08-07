@@ -27,111 +27,182 @@
     </div>
 </template>
 <script lang="ts">
-/**
- * TODO
- * 1) Groping messages by date like VK
- * 2) Show, if other user typing message
- */
 
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
+import { EChatTypes, IChat } from '@/models/IChat';
+import { useStore } from 'vuex';
+import { IUser } from '@/models/IUser';
+import { useRoute } from 'vue-router';
+
+interface IDialogProperties extends IChat {
+    /**
+     * List of online users ID
+     */
+    online: number[];
+
+    /**
+     * Chat title
+     */
+    title?: string;
+
+    /**
+     * List of typing users ID
+     */
+    typing: number[];
+
+    avatar?: string;
+
+    shortName?: string;
+}
 
 export default defineComponent({
     components: { DialogMessage, SendMessageField },
     mixins: [ chatMixin, imgMixin ],
     name: "chat-dialog",
-    data() {
-        return {
-            chat: undefined,
-            typingUsers: []
-        }
-    },
-    watch: {
-        chat(chat) {
-            if (chat) {
+
+    setup() {
+        const store = useStore();
+        const route = useRoute();
+        const user = ref<IUser | undefined>(undefined);
+        const chat = ref<IDialogProperties | undefined>(undefined);
+        const typingUsers = ref<number[]>([]);
+        const messagesContainer = ref<HTMLElement | null>(null);
+
+        onMounted(() => {
+            user.value = store.state.authModule.user;
+            const chatId = parseInt(route.query.id as string);
+            const userId = parseInt(route.query.user as string);
+
+            if (chatId) {
+                chatMixin.connection.call('getChat', { chat: { id: chatId } });
+            } else if (userId) {
+                chatMixin.connection.call('createChat', { users: [user.value!.id, userId] });
+            }
+        });
+
+        /**
+         * Return prepared chat info for child component
+         * 
+         * @returns {IDialogProperties}
+         */
+        const chatInfo = computed(() => {
+            const info: IDialogProperties = {
+                id: 0,
+                type: EChatTypes.DIALOG,
+                users: [],
+                messages: [],
+                online: [],
+                typing: []
+            };
+            if (chat.value) {
+                if (chat.value.type == EChatTypes.DIALOG) {
+                    const oponent = chat.value.users.filter((chatUser) => chatUser.id !== user.value!.id)[0];
+                    info.id = oponent.id;
+                    info.title = `${oponent.first_name} ${oponent.last_name}`;
+                    info.avatar = chatMixin.staticUrl(oponent.avatar);
+                    info.shortName = oponent.first_name;
+
+                    const oponentOnline = chat.value.online.indexOf(oponent.id) != -1;
+                    const oponentTyping = typingUsers.value.indexOf(oponent.id) != -1;
+
+                    if (oponentOnline) info.online.push(oponent.id);
+                    if (oponentTyping) info.typing.push(oponent.id);
+
+                    chatMixin.connection.call('getOnlineUsers', { users: [oponent.id] });
+                }
+            }
+
+            return info;
+        });
+
+        watch(chat, (newInfo, oldInfo) => {
+            if (oldInfo) {
                 const interval = setInterval(() => {
-                    if (this.scrollToLastMessage()) clearInterval(interval);
+                    if (scrollToLastMessage()) clearInterval(interval);
                 }, 100);
-            }            
-        }
-    },
-    methods: {
-        nextAuthor(index) {
-            if (index + 1 != this.chat.messages.length) {
-                return this.chat.messages[index + 1].user;
+            }  
+        });
+
+        /**
+         * Get next message author for displaying in chat
+         * 
+         * @param {number} messageIndex index of chat message
+         * @returns {IUser | undefined} 
+         */
+        const nextAuthor = (messageIndex: number): IUser | undefined => {
+            if (messageIndex + 1 !== chat.value!.messages.length) {
+                return chat.value!.messages[messageIndex + 1].user;
             }
 
             return undefined;
-        },
-        send(message) {
+        };
+
+        /**
+         * Send new message to chat
+         * 
+         * @param {string} message message content
+         * @returns {void}
+         */
+        const send = (message: string): void => {
             const messageFormated = {
                 date: new Date(),
-                content: message,
-                author: this.user
+                message,
+                author: user.value
             }
-            this.connection.call('sendMessage', { chat: this.chat, message: messageFormated });
-        },
-        setTyping(state) {
-            this.connection.call('setTyping', { chat: this.chat, user: this.user, typing: state });
-        },
-        scrollToLastMessage() {
-            
-            const lastMessageElement = this.$refs.messagesContainer?.lastElementChild;
+            chatMixin.connection.call('sendMessage', { chat: chat.value, message: messageFormated });
+        };
+
+        /**
+         * Set user typing on chat
+         * 
+         * @param {boolean} typing
+         * @returns {void}
+         */
+        const setTyping = (typing: boolean): void => {
+            chatMixin.connection.call('setTyping', { chat: chat.value, user: user.value, typing });
+        };
+
+        const scrollToLastMessage = () => {
+            const lastMessageElement = messagesContainer.value?.lastElementChild as HTMLElement | null;
             if (lastMessageElement) {
                 lastMessageElement?.scrollIntoView({behavior: 'smooth'});
                 return true;
             }
             return false;
-        },
-        showUserTyping(state) {
-            const typingState = state.state;
-            const userId = state.user.id;
-            if (typingState) {
-                this.typingUsers.push(userId);
-            } else {
-                this.typingUsers = this.typingUsers.filter(id => id != userId);
-            }
-        }
-    },
-    mounted() {
-        const chatId = parseInt(this.$route.query.id);
-        const userId = parseInt(this.$route.query.user);
+        };
 
-        if (chatId) {
-            this.connection.call('getChat', { chat: { id: chatId } });
-        } else if (userId) {
-            this.connection.call('createChat', { users: [this.user.id, userId] });
-        }
-    },
-    computed: {
-        chatInfo() {
-            if (this.chat) {
-                let chatInfo = {};
-                if (this.chat.type == 0) {
-                    const oponent = this.chat.users.filter((user) => user.id != this.user.id)[0];
-                    chatInfo.id = oponent.id;
-                    chatInfo.title = `${oponent.first_name} ${oponent.last_name}`;
-                    chatInfo.avatar = this.staticUrl(oponent.avatar);
-                    chatInfo.typing = this.typingUsers.indexOf(oponent.id) != -1;
-                    chatInfo.shortName = oponent.first_name;
-                    chatInfo.online = this.chat.online.indexOf(oponent.id) != -1;
+        /*
+         * @param state 
+         */
+        // const showUserTyping = (state): void => {
+        //     const typingState = state.state;
+        //     const userId = state.user.id;
+        //     if (typingState) {
+        //         typingUsers.value.push(userId);
+        //     } else {
+        //         typingUsers.value = typingUsers.value.filter(id => id != userId);
+        //     }
+        // };
 
-                    this.connection.call('getOnlineUsers', { users: [oponent.id] });
-                }
-                if (this.chat.type == 1) {
-                    chatInfo.title = 'chat';
-                    chatInfo.avatar = this.avatar;
-                } 
-
-                return chatInfo;
-            }
-            return {};
+        return {
+            user,
+            chat,
+            typingUsers,
+            chatInfo,
+            nextAuthor,
+            send,
+            setTyping,
+            scrollToLastMessage,
+            //showUserTyping
         }
     }
+
 });
+
 </script>
 <style lang="scss">
     .dialog {

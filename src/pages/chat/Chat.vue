@@ -24,25 +24,42 @@
 
 import chatMixin from '@/mixins/chat';
 import imgMixin from '@/mixins/img';
-import { defineComponent } from 'vue';
+import { IChat } from '@/models/IChat';
+import { IUser } from '@/models/IUser';
+import { defineComponent, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
     components: {  },
     mixins: [ chatMixin, imgMixin ],
     name: "chat-element",
-    data() {
-        return {
-            chats: undefined
-        }
-    },
-    mounted() {
-        this.connection.call('chatList', { user: this.user, token: localStorage.getItem('apiToken') });
-    },
-    methods: {
-        openChat(dst) {
+
+    setup() {
+        const store = useStore();
+        const user = ref<IUser | undefined>(undefined);
+        const chats = ref<IChat[]>([]);
+
+        onMounted(() => {
+            user.value = store.state.authModule.user;
+            chatMixin.connection.call('chatList', { user: user.value, token: localStorage.getItem('apiToken') });
+        });
+
+        /**
+         * Open chat with user
+         * 
+         * @param {IUser} dst oponent in chat
+         * @returns {void}
+         */
+        const openChat = (dst: IUser): void => {
             const url = `/chat?user=${dst.id}`;
             window.history.replaceState({}, '', url);
-        },            
+        };
+
+        return {
+            user,
+            chats,
+            openChat
+        }
     }
 });
 </script>
