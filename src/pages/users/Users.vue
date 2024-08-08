@@ -13,8 +13,11 @@
             </div>
         </div>
     </div>
-    <div v-else>
-        no users
+    <div v-else class="user-list">
+        <div class="user-list__empty">
+            <div class="main">No Users</div>
+            <div class="description">Try later</div>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
@@ -69,6 +72,19 @@ const username = (user: IUser): string => {
                     font-size: 10px;
                     margin-left: 10px;
                 }
+            }
+        }
+
+        &__empty {
+            padding: 20px;
+
+            .main {
+                font-size: 20px;
+                margin: 20px 0;
+            }
+
+            .description {
+                font-weight: bold;
             }
         }
     }
