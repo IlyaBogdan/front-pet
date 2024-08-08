@@ -31,7 +31,6 @@ export abstract class WsConnection
         if (WsConnection.instance) {
             return WsConnection.instance;
         }
-        console.log(process.env.VUE_APP_BROKER_CONNECTION!);
         
         this.connection = new WebSocket(process.env.VUE_APP_BROKER_CONNECTION!);        
     }

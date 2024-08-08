@@ -9,9 +9,9 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { IUser } from '@/models/IUser';
-import { defineComponent, ref } from 'vue';
+import { defineOptions, defineProps, ref } from 'vue';
 
 interface IChatListProps {
     /**
@@ -20,17 +20,13 @@ interface IChatListProps {
     users: IUser[]
 }
 
-export default defineComponent({
+defineOptions({
     name: "chat-list",
-
-    setup(props: IChatListProps) {
-        const users = ref<IUser[]>(props.users);
-        
-        return {
-            users
-        }
-    }
 });
+
+const props = defineProps<IChatListProps>();
+const users = ref<IUser[]>(props.users);
+
 </script>
 <style lang="scss">
     .user-list {

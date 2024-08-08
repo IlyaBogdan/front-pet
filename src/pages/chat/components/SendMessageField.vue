@@ -29,51 +29,45 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Attachment from '@/assets/attachment.svg';
 import Emoji from '@/assets/emoji.svg';
 import Photo from '@/assets/photo.svg';
 import SendIcon from '@/assets/send-icon.svg';
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineOptions, defineEmits, onMounted, ref } from 'vue';
 
-export default defineComponent({
-    name: "send-message-field",
-    setup(props, { emit }) {
-        const message = ref('');
-        const typing = ref(false);
-        const attachment = ref(Attachment);
-        const emoji = ref(Emoji);
-        const photo = ref(Photo);
-        const sendIcon = ref(SendIcon);
-        const textArea = ref<HTMLElement | null>(null);
-
-        onMounted(() => {
-            textArea.value!.setAttribute("style", "height:" + (textArea.value!.scrollHeight) + "px;overflow-y:hidden;");
-            textArea.value!.addEventListener("input", function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + "px";
-            }, false);
-        });
-
-        const send = () => {
-            if (message.value.length) {
-                emit('sendMessage', message.value);
-                emit('typing', false);
-                message.value = '';
-            }
-        };
-
-        return {
-            message,
-            typing,
-            attachment,
-            emoji,
-            photo,
-            sendIcon,
-            send
-        }
-    }
+defineOptions({
+    name: "send-message-field"
 });
+
+const emit = defineEmits<{
+  (e: 'typing', value: boolean): void,
+  (e: 'sendMessage', message: string): void
+}>();
+
+const message = ref('');
+const attachment = ref(Attachment);
+const emoji = ref(Emoji);
+const photo = ref(Photo);
+const sendIcon = ref(SendIcon);
+const textArea = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    textArea.value!.setAttribute("style", "height:" + (textArea.value!.scrollHeight) + "px;overflow-y:hidden;");
+    textArea.value!.addEventListener("input", function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + "px";
+    }, false);
+});
+
+const send = () => {
+    if (message.value.length) {
+        emit('sendMessage', message.value);
+        emit('typing', false);
+        message.value = '';
+    }
+};
+
 </script>
 <style lang="scss">
     .send-message {
