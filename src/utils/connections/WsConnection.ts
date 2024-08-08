@@ -102,7 +102,6 @@ export abstract class WsConnection
      * Call broker API method
      * 
      * @param {any} options params for method
-     * @param {?TInterceptConfig} interceptConfig config for intercept incomming messages
      * @returns {void}
      */
     public call(options: any = {}): WsConnection
