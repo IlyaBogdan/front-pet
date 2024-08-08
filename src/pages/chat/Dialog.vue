@@ -4,7 +4,7 @@
         <div class="chat-info">
             <avatar-icon class="chat-info__avatar" :avatar="chatInfo.avatar" :online="chatInfo.online" />
             <div class="chat-info__title" >{{ chatInfo.title }}</div>
-            <div v-if="chatInfo.typing" class="chat-info__typing" >
+            <div v-if="typingStatus" class="chat-info__typing" >
                 <div class="text">{{ chatInfo.shortName }} typing</div>
                 <div class="typing">
                     <div class="dot"></div>
@@ -33,36 +33,17 @@ import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
 import { useChatMixin } from '@/mixins/useChatMixin';
 import { useImgMixin } from '@/mixins/useImgMixin';
-import { EChatTypes, IChat } from '@/models/IChat';
+import { EChatTypes } from '@/models/IChat';
 import { useStore } from 'vuex';
 import { IUser } from '@/models/IUser';
 import { useRoute, useRouter } from 'vue-router';
-
-interface TDialogProperties extends IChat {
-    /**
-     * List of online users ID
-     */
-    online: number[];
-
-    /**
-     * Chat title
-     */
-    title?: string;
-
-    /**
-     * List of typing users ID
-     */
-    typing: number[];
-
-    avatar?: string;
-
-    shortName?: string;
-}
+import { TActiveChat, TUserTyping } from '@/utils/connections/chat/responses';
+import { IChatInfo, IMessageInfo } from '@/models/IChatInfo';
 
 const store = useStore();
 const route = useRoute();
 const user = ref<IUser | undefined>(undefined);
-const chat = ref<TDialogProperties | undefined>(undefined);
+const chat = ref<IChatInfo | undefined>(undefined);
 const typingUsers = ref<number[]>([]);
 const messagesContainer = ref<HTMLElement | null>(null);
 const { staticUrl } = useImgMixin();
@@ -86,32 +67,34 @@ onMounted(() => {
         });
     }
 
-    useInterceptor('activeChat', (brokerMessage) => {
+    useInterceptor('activeChat', (brokerMessage: TActiveChat) => {
         chat.value = brokerMessage.chat;
-
-        // eslint-disable-next-line
-        brokerMessage.chat.messages.forEach((message: any) => {
-            if (message.user.id == user.value!.id) message.type = 'out';
+        chat.value.messages.forEach((message: IMessageInfo) => {
+            if (message.user!.id == user.value!.id) message.type = 'out';
             else message.type = 'in';
         });
 
         router.push(`/dialog?id=${chat.value!.id}`);
     });
 
-    useInterceptor('userTyping', (brokerMessage) => {
-
-        showUserTyping(brokerMessage.user, brokerMessage.state);
-        //{ method: 'userTyping', user: who, chat, state: state }
+    useInterceptor('userTyping', (brokerMessage: TUserTyping) => {
+        const typingState = brokerMessage.state;
+        const userId = brokerMessage.user.id;
+        if (typingState) {
+            typingUsers.value.push(userId);
+        } else {
+            typingUsers.value = typingUsers.value.filter(id => id != userId);
+        }
     });
 });
 
 /**
  * Return prepared chat info for child component
  * 
- * @returns {TDialogProperties}
+ * @returns {IChatInfo}
  */
 const chatInfo = computed(() => {
-    const info: TDialogProperties = {
+    const info: IChatInfo = {
         id: 0,
         type: EChatTypes.DIALOG,
         users: [],
@@ -127,17 +110,21 @@ const chatInfo = computed(() => {
             info.avatar = staticUrl(oponent.avatar);
             info.shortName = oponent.first_name;
 
-            const oponentOnline = chat.value.online.indexOf(oponent.id) != -1;
-            const oponentTyping = typingUsers.value.indexOf(oponent.id) != -1;
+            const oponentOnline = chat.value.online.indexOf(oponent.id) !== -1;
+            const oponentTyping = typingUsers.value.filter((userId) => oponent.id === userId);
 
             if (oponentOnline) info.online.push(oponent.id);
-            if (oponentTyping) info.typing.push(oponent.id);
+            if (oponentTyping) info.typing!.push(oponent);
 
             //useConnection.({ method: 'getOnlineUsers', users: [oponent.id] });
         }
     }
 
     return info;
+});
+
+const typingStatus = computed(() => {
+    return typingUsers.value.length;
 });
 
 watch(chat, (newInfo, oldInfo) => {
@@ -204,19 +191,6 @@ const scrollToLastMessage = () => {
         return true;
     }
     return false;
-};
-
-/**
- * @param {boolean} typingState
- * @returns {void}
- */
-const showUserTyping = (user: IUser, typingState: boolean): void => {
-    const userId = user.id;
-    if (typingState) {
-        typingUsers.value.push(userId);
-    } else {
-        typingUsers.value = typingUsers.value.filter(id => id != userId);
-    }
 };
 
 </script>

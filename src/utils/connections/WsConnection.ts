@@ -92,6 +92,7 @@ export abstract class WsConnection
 
         return this;
     }
+    
     public onClose(callback=()=>{}) {
         this.connection!.onclose = callback;
 

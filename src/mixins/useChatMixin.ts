@@ -53,22 +53,9 @@ export const useChatMixin = () => {
     }
   };
 
-  const sendMessage = (message: IMessage) => {
-    if (user.value && connection.value) {
-      message.user = user.value;
-      //connection.value.call("sendMessage", message);
-    }
-  };
-
   const convertChatInfo = (chat: IChat): IChatInfo => {
-    const chatInfo: IChatInfo = {
-      id: 0,
-      title: "",
-      avatar: "",
-      shortName: "",
-      // typing: false,
-      // online: false
-    };
+    const chatInfo: IChatInfo = { ...chat, online: [] };
+
     if (chat.type === 0) {
       const opponent = chat.users.filter(
         (chatUser) => chatUser.id !== user.value?.id
@@ -77,9 +64,7 @@ export const useChatMixin = () => {
         chatInfo.id = opponent.id;
         chatInfo.title = `${opponent.first_name} ${opponent.last_name}`;
         chatInfo.avatar = staticUrl(opponent.avatar);
-        // chatInfo.typing = this.typingUsers.indexOf(opponent.id) !== -1;
         chatInfo.shortName = opponent.first_name;
-        // chatInfo.online = this.chat.online.indexOf(opponent.id) !== -1;
 
         // this.connection.call('getOnlineUsers', { users: [opponent.id] });
       }
@@ -111,10 +96,8 @@ export const useChatMixin = () => {
   }
 
   return {
-    connection: connection.value,
     user,
     online,
-    sendMessage,
     convertChatInfo,
     useInterceptor,
     useConnection
