@@ -6,6 +6,7 @@ import { IMessage } from "@/models/IMessage";
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useImgMixin } from "./useImgMixin";
+import { TInterceptConfig } from "@/utils/connections/WsMessageInterceptor";
 
 export const useChatMixin = () => {
   const store = useStore();
@@ -13,6 +14,8 @@ export const useChatMixin = () => {
   const user = ref<IUser | undefined>(undefined);
   const online = ref(false);
   const { staticUrl } = useImgMixin();
+  const listeners = ref<TInterceptConfig[]>([]);
+  const callQuee = ref<any[]>([]);
 
   onMounted(() => {
     user.value = store.state.authModule.user;
@@ -23,10 +26,19 @@ export const useChatMixin = () => {
     connection.value = new ChatConnection().intercept();
     if (connection.value) {
       connection.value.onOpen(() => {
+
+        listeners.value.forEach((interceptConfig) => {
+          connection.value!.interceptor.setListener(interceptConfig);
+        });
+
+        callQuee.value.forEach((callParams) => {
+          useConnection(callParams);
+        });
+
         online.value = true;
         const apiToken = localStorage.getItem("apiToken");
         if (apiToken) {
-          connection.value!.call("pull", { token: apiToken });
+          connection.value!.pull({ token: apiToken, user: user.value! });
         }
       }).onClose(() => {
         online.value = false;
@@ -37,7 +49,7 @@ export const useChatMixin = () => {
   const sendMessage = (message: IMessage) => {
     if (user.value && connection.value) {
       message.user = user.value;
-      connection.value.call("sendMessage", message);
+      //connection.value.call("sendMessage", message);
     }
   };
 
@@ -72,11 +84,36 @@ export const useChatMixin = () => {
     return chatInfo;
   };
 
+  /**
+   * Set message handler for intercepting broker messages
+   * 
+   * @param {string} method name of method of incomming message
+   * @callback any incomming messages nandler
+   * @returns {void}
+   */
+  const useInterceptor = (method: string, handler: (...args: any[]) => any) => {
+    listeners.value.push({ method, handler });
+
+    if (connection.value) {
+      connection.value.interceptor.setListener({ method, handler });
+    }
+  }
+
+  const useConnection = (callParams: any) => {
+    if (connection.value) {
+      connection.value.call(callParams);
+    } else {
+      callQuee.value.push(callParams);
+    }
+  }
+
   return {
-    connection,
+    connection: connection.value,
     user,
     online,
     sendMessage,
-    convertChatInfo
+    convertChatInfo,
+    useInterceptor,
+    useConnection
   };
 };

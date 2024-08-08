@@ -26,13 +26,21 @@ import { useChatMixin } from '@/mixins/useChatMixin';
 import { useImgMixin } from '@/mixins/useImgMixin';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
 
 const userList = ref<Array<IUser>>([]);
-const { connection, user } = useChatMixin();
+const { user, useInterceptor, useConnection } = useChatMixin();
 const { staticUrl } = useImgMixin();
+const store = useStore();
 
 onMounted(() => {
-    connection.value!.call('getUsers', { user: user.value });
+    useConnection({ method: 'getUsers', user: user.value! });
+
+    useInterceptor('setUserList', (brokerMessage) => {
+        const authUser = store.state.authModule.user;
+        // eslint-disable-next-line
+        userList.value = brokerMessage.users.filter((user: any) => user.id != authUser.id);
+    });
 });
 
 /**

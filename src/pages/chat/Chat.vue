@@ -31,11 +31,28 @@ import { useStore } from 'vuex';
 const store = useStore();
 const user = ref<IUser | undefined>(undefined);
 const chats = ref<IChat[]>([]);
-const { connection, convertChatInfo } = useChatMixin();
+const { connection, convertChatInfo, useInterceptor } = useChatMixin();
 
 onMounted(() => {
     user.value = store.state.authModule.user;
-    connection.value!.call('chatList', { user: user.value, token: localStorage.getItem('apiToken') });
+    connection!.chatList({
+        user: user.value!,
+        token: localStorage.getItem('apiToken')
+    });
+
+    useInterceptor('pull', () => {
+        connection!.pull({ 
+            user: user.value!
+        });
+    });
+
+    useInterceptor('setUser', (brokerMessage) => {
+        chats.value = brokerMessage.body.chats;
+    });
+
+    useInterceptor('userDialogs', (brokerMessage) => {
+        chats.value = brokerMessage.body.chats;
+    });
 });
 
 /**

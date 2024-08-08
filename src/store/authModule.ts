@@ -1,10 +1,11 @@
 
 import { Module } from 'vuex';
 import { RootState } from './RootState';
+import { IUser } from '@/models/IUser';
 
 export interface AuthState {
     authenticated: boolean;
-    user: any
+    user: IUser
 }
 
 export const authModule: Module<AuthState, RootState> = {

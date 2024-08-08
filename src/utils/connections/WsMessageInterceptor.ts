@@ -1,11 +1,17 @@
 export type TBrokerMessageHandler = (...args: any[]) => any;
 
+export type TInterceptConfig = {
+    method: string,
+    handler: (...args: any[]) => any
+}
+
 /**
  * Abstract class for intercepting broker messages
  */
 export abstract class WsMessageInterceptor
 {
     protected static instance: WsMessageInterceptor | undefined;
+    protected listeners: Array<TInterceptConfig> = [];
 
     constructor() {
         if (WsMessageInterceptor.instance) {
@@ -15,23 +21,25 @@ export abstract class WsMessageInterceptor
         WsMessageInterceptor.instance = this;
     }
 
-    protected abstract messageHandlers: Array<TBrokerMessageHandler>;
-
-
-    /**
-     * Find supported message handler of broker message by name
-     * 
-     * @param {string} methodName method name of incomming broker message
-     * @returns {TBrokerMessageHandler | undefined}
-     */
-    public getHandler(methodName: string): TBrokerMessageHandler | undefined
+    public setListener(interceptConfig: TInterceptConfig): WsMessageInterceptor
     {
-        for (const method of this.messageHandlers) {
-            if (method.name === methodName) {
-                return method;
-            }
+        const registredListener = this.listeners.filter((listener) => listener.method === interceptConfig.method);
+
+        if (registredListener.length) {
+            this.listeners.push(interceptConfig);
         }
 
-        return undefined;
+        return this;
+    }
+
+    public checkListeners(brokerMessage: any): WsMessageInterceptor
+    {
+        const registredListener = this.listeners.filter((listener) => listener.method === brokerMessage.method);
+        if (registredListener.length) {
+            const { handler } = registredListener[0];
+            handler(brokerMessage);
+        }
+
+        return this;
     }
 }

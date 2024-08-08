@@ -13,11 +13,6 @@ export abstract class WsConnection
     protected static instance: WsConnection | undefined;
 
     /**
-     * Abstract methods list
-     */
-    protected abstract methods: Array<TBrokerAPIMethod>;
-
-    /**
      * Abstract interceptor of broker messages
      */
     protected abstract interceptor: WsMessageInterceptor;
@@ -79,28 +74,25 @@ export abstract class WsConnection
     public intercept(): any
     {
         this.connection!.onmessage = (brokerMessage) => {
+
             const data = JSON.parse(brokerMessage.data);
+            this.interceptor.checkListeners(data);
             console.log('Accepted data:');
             console.log(data);
 
             if (data.method === 'ok') return;
-
-            const messageHandler = this.interceptor.getHandler(data.method);
-            if (messageHandler) {
-                messageHandler(data);
-            }
         }
 
         return this;
     }
 
 
-    onOpen(callback=()=>{}) {
+    public onOpen(callback=()=>{}) {
         this.connection!.onopen = callback;
 
         return this;
     }
-    onClose(callback=()=>{}) {
+    public onClose(callback=()=>{}) {
         this.connection!.onclose = callback;
 
         return this;
@@ -109,11 +101,11 @@ export abstract class WsConnection
     /**
      * Call broker API method
      * 
-     * @param {string} methodName 
      * @param {any} options params for method
+     * @param {?TInterceptConfig} interceptConfig config for intercept incomming messages
      * @returns {void}
      */
-    public call(methodName: string, options: any = {}): void
+    public call(options: any = {}): WsConnection
     {
         const data = {
             ...options,
@@ -121,22 +113,7 @@ export abstract class WsConnection
         };
 
         WsConnection.wsSend(this.connection!, data);
-    }
 
-    /**
-     * Find supported methods for sending data to broker
-     * 
-     * @param {string} methodName method name of incomming broker message
-     * @returns {TBrokerMessageHandler | undefined}
-     */
-    protected getMethod(methodName: string): TBrokerAPIMethod | undefined
-    {
-        for (const method of this.methods) {
-            if (method.name === methodName) {
-                return method;
-            }
-        }
-
-        return undefined;
+        return this;
     }
 }

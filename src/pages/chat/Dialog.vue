@@ -36,9 +36,9 @@ import { useImgMixin } from '@/mixins/useImgMixin';
 import { EChatTypes, IChat } from '@/models/IChat';
 import { useStore } from 'vuex';
 import { IUser } from '@/models/IUser';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
-interface IDialogProperties extends IChat {
+interface TDialogProperties extends IChat {
     /**
      * List of online users ID
      */
@@ -62,11 +62,13 @@ interface IDialogProperties extends IChat {
 const store = useStore();
 const route = useRoute();
 const user = ref<IUser | undefined>(undefined);
-const chat = ref<IDialogProperties | undefined>(undefined);
+const chat = ref<TDialogProperties | undefined>(undefined);
 const typingUsers = ref<number[]>([]);
 const messagesContainer = ref<HTMLElement | null>(null);
 const { staticUrl } = useImgMixin();
-const { connection } = useChatMixin();
+// eslint-disable-next-line
+const { connection, useInterceptor } = useChatMixin();
+const router = useRouter();
 
 onMounted(() => {
     user.value = store.state.authModule.user;
@@ -74,19 +76,37 @@ onMounted(() => {
     const userId = parseInt(route.query.user as string);
 
     if (chatId) {
-        connection.value!.call('getChat', { chat: { id: chatId } });
+        //connection!.getChat({ chat: { id: chatId } });
     } else if (userId) {
-        connection.value!.call('createChat', { users: [user.value!.id, userId] });
+        //connection!.createChat({ users: [user.value!.id, userId] });
     }
+
+    useInterceptor('activeChat', (brokerMessage) => {
+        chat.value = brokerMessage.chat;
+
+        // eslint-disable-next-line
+        brokerMessage.chat.messages.forEach((message: any) => {
+            if (message.user.id == user.value!.id) message.type = 'out';
+            else message.type = 'in';
+        });
+
+        router.push(`/dialog?id=${chat.value!.id}`);
+    });
+
+    useInterceptor('userTyping', (brokerMessage) => {
+
+        showUserTyping(brokerMessage.user, brokerMessage.state);
+        //{ method: 'userTyping', user: who, chat, state: state }
+    });
 });
 
 /**
  * Return prepared chat info for child component
  * 
- * @returns {IDialogProperties}
+ * @returns {TDialogProperties}
  */
 const chatInfo = computed(() => {
-    const info: IDialogProperties = {
+    const info: TDialogProperties = {
         id: 0,
         type: EChatTypes.DIALOG,
         users: [],
@@ -108,7 +128,7 @@ const chatInfo = computed(() => {
             if (oponentOnline) info.online.push(oponent.id);
             if (oponentTyping) info.typing.push(oponent.id);
 
-            connection.value!.call('getOnlineUsers', { users: [oponent.id] });
+            //connection!.getOnlineUsers({ users: [oponent.id] });
         }
     }
 
@@ -144,12 +164,13 @@ const nextAuthor = (messageIndex: number): IUser | undefined => {
  * @returns {void}
  */
 const send = (message: string): void => {
+    // eslint-disable-next-line
     const messageFormated = {
         date: new Date(),
         message,
         author: user.value
     }
-    connection.value!.call('sendMessage', { chat: chat.value, message: messageFormated });
+    //connection!.sendMessage({ chat: chat.value, message: messageFormated });
 };
 
 /**
@@ -158,8 +179,9 @@ const send = (message: string): void => {
  * @param {boolean} typing
  * @returns {void}
  */
+// eslint-disable-next-line
 const setTyping = (typing: boolean): void => {
-    connection.value!.call('setTyping', { chat: chat.value, user: user.value, typing });
+    //connection!.setTyping({ chat: chat.value, user: user.value, typing });
 };
 
 const scrollToLastMessage = () => {
@@ -171,18 +193,18 @@ const scrollToLastMessage = () => {
     return false;
 };
 
-/*
-    * @param state 
-    */
-// const showUserTyping = (state): void => {
-//     const typingState = state.state;
-//     const userId = state.user.id;
-//     if (typingState) {
-//         typingUsers.value.push(userId);
-//     } else {
-//         typingUsers.value = typingUsers.value.filter(id => id != userId);
-//     }
-// };
+/**
+ * @param {boolean} typingState
+ * @returns {void}
+ */
+const showUserTyping = (user: IUser, typingState: boolean): void => {
+    const userId = user.id;
+    if (typingState) {
+        typingUsers.value.push(userId);
+    } else {
+        typingUsers.value = typingUsers.value.filter(id => id != userId);
+    }
+};
 
 </script>
 <style lang="scss">
