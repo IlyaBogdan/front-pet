@@ -58,7 +58,6 @@ const password = ref<string | undefined>(undefined);
 const passwordRepeat = ref<string | undefined>(undefined);
 const firstName = ref<string | undefined>(undefined);
 const lastName = ref<string | undefined>(undefined);
-const passwordsEquals = ref(false);
 const errors = ref<string[]>([]);
 const loading = ref(false);
 
@@ -90,8 +89,7 @@ const validate = (): ISignUpParams => {
  */
 const signUpHandle = (): void => {
     const data: ISignUpParams = validate();
-
-    if (!errors.value.length && passwordsEquals.value) {
+    if (!errors.value.length) {
         loading.value = true;
         signUp(data)
             .then(() => {

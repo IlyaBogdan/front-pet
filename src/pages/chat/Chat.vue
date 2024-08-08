@@ -16,11 +16,6 @@
 </template>
 
 <script setup lang="ts">
-/**
- * TODO
- * 1) Open chat whit other users by link
- * 2) 
- */
 
 import { useChatMixin } from '@/mixins/useChatMixin';
 import { IChat } from '@/models/IChat';

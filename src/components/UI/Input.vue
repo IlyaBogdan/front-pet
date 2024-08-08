@@ -37,10 +37,12 @@ export default defineComponent({
         writableValue: {
             get()
             {
+                console.log(this.value);
                 return this.value;
             },
             set(newValue)
             {
+                console.log(newValue);
                 this.$emit('update:value', newValue);
             }
         }
