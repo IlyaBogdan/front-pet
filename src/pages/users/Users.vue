@@ -17,36 +17,30 @@
         no users
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import chatMixin from '@/mixins/chat';
+import { useChatMixin } from '@/mixins/chat';
+import { useImgMixin } from '@/mixins/img';
 import { IUser } from '@/models/IUser';
-import { defineComponent, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-export default defineComponent({
-    name: 'users-list',
+const userList = ref<Array<IUser>>([]);
+const { connection, user } = useChatMixin();
+const { staticUrl } = useImgMixin();
 
-    setup() {
-        const userList = ref<Array<IUser>>([]);
-
-        /**
-         * Return concatinated username
-         * 
-         * @param {IUser} user user information
-         * @returns {string} concatinated first name and last name  
-         */
-        const username = (user: IUser): string => {
-            return `${user.first_name} ${user.last_name}`;
-        };
-
-        chatMixin.connection.call('getUsers', { user: chatMixin.user });
-
-        return {
-            userList,
-            username
-        }
-    }
+onMounted(() => {
+    connection.value!.call('getUsers', { user: user.value });
 });
+
+/**
+ * Return concatinated username
+ * 
+ * @param {IUser} user user information
+ * @returns {string} concatinated first name and last name  
+ */
+const username = (user: IUser): string => {
+    return `${user.first_name} ${user.last_name}`;
+};
 
 </script>
 <style lang="scss">

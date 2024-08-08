@@ -25,42 +25,60 @@
                     <div class="username">{{ $store.state.authModule.user.first_name }}</div>
                     <avatar-icon :avatar="userAvatar"/>
                 </router-link>
-                <button-ui type="primary" @click="logout">Logout</button-ui>
+                <button-ui type="primary" @click="logoutHandler">Logout</button-ui>
             </div>
         </div>
     </header>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
 import { logout } from "@/utils/api/auth/logout";
 import LogoFull from "./Logo.vue";
-import { defineComponent } from 'vue';
+import { computed, defineOptions } from 'vue';
+import { useStore } from "vuex";
+import { useImgMixin } from "@/mixins/img";
 
-export default defineComponent({
-    components: { LogoFull },
-    name: "HeaderElement",
-    methods: {
-        logout() {
-            logout()
-                .then(() => {
-                    window.location.href = "/";
-                });
-        },
-        changeLoc(loc: string) {
-            window.location.href = loc;
-        },
-        openSideBar() {
-            console.log('Open side bar');
-            this.$store.commit('setOpened', true);
-            console.log(this.$store.state.sideBar.opened);
-        }
-    },
-    computed: {
-        userAvatar() {
-            return this.$store.state.authModule.user.avatar ? `${process.env.VUE_APP_BACKEND_PUBLIC}${this.$store.state.authModule.user.avatar}` : '';
-        }
-    }
+defineOptions({
+    name: "HeaderElement"
 });
+
+const store = useStore();
+const { staticUrl, storeUrl } = useImgMixin();
+
+const userAvatar = computed(() => {
+    const avatar = store.state.authModule.user.avatar;
+
+    return avatar ?  storeUrl(avatar) : staticUrl(avatar);
+});
+
+
+/**
+ * Logout handler
+ * @returns {void}
+ */
+const logoutHandler = (): void => {
+    logout()
+        .then(() => {
+            window.location.href = "/";
+        });
+};
+
+/**
+ * Change location
+ * @param {string} loc location
+ * @returns {void}
+ */
+const changeLoc = (loc: string): void => {
+    window.location.href = loc;
+};
+
+/**
+ * 
+ * @returns {void}
+ */
+const openSideBar = (): void => {
+    store.commit('setOpened', true);
+}
 
 </script>
 <style lang="scss" scoped>

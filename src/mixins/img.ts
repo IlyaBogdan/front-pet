@@ -1,17 +1,18 @@
 import noIcon from '@/assets/no-icon.png';
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 
-export default defineComponent({
-    setup() {
-        const avatar = ref(noIcon);
-
-        const staticUrl = (relationUrl: string) => {
-            return relationUrl ? `${process.env.VUE_APP_BACKEND_PUBLIC}/${relationUrl}` : '';
-        };
-
-        return {
-            avatar,
-            staticUrl
-        }
+export const useImgMixin = () => {
+    const staticUrl = (relationUrl: string) => {
+        console.log(noIcon);
+        return relationUrl ? `${process.env.VUE_APP_BACKEND_PUBLIC}/${relationUrl}` : noIcon;
     }
-});
+
+    const storeUrl = (relationUrl: string) => {
+        return `${process.env.VUE_APP_BACKEND_PUBLIC}${relationUrl}`;
+    }
+
+    return {
+        staticUrl,
+        storeUrl
+    }
+};

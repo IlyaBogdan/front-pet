@@ -5,21 +5,20 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineOptions, defineProps, ref } from 'vue';
 
-export default defineComponent({
-    name: "errors-list",
-    props: {
-        errors: {
-            type: Array,
-            default: () => {
-                return [];
-            }
-        }
-    }
+interface IErrorListProps {
+    errors?: string[]
+}
+
+defineOptions({
+    name: "errors-list"
 });
+
+const props = defineProps<IErrorListProps>();
+const errors = ref(props.errors)
 
 </script>
 <style lang="scss" scoped>

@@ -4,21 +4,16 @@
         <div class="title">CockSender</div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
 import Logo from '@/assets/logo.jpg';
-import { defineComponent, ref } from 'vue';
+import { defineOptions, ref } from 'vue';
 
-export default defineComponent({
-    name: "logo-full",
-    setup() {
-        const logo = ref(Logo);
-
-        return {
-            logo
-        }
-    }
+defineOptions({
+    name: "logo-full"
 });
+
+const logo = ref(Logo);
 
 </script>
 <style lang="scss">

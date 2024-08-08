@@ -8,32 +8,22 @@
         <router-link to="/messanger">Messanger</router-link>
     </nav>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import { computed, defineComponent } from "vue";
+import { computed } from "vue";
 import LogoFull from "./Logo.vue";
 import { useStore } from "vuex";
 
-export default defineComponent({
-    components: { LogoFull },
-    setup() {
-        const store = useStore();
+const store = useStore();
 
-        const opened = computed(() => {
-            return store.state.sideBar.opened;
-        });
-
-        const close = () => {
-            store.commit('setOpened', false);
-            console.log(store.state.sideBar.opened);
-        }
-
-        return {
-            close,
-            opened
-        }
-    }
+const opened = computed(() => {
+    return store.state.sideBar.opened;
 });
+
+const close = () => {
+    store.commit('setOpened', false);
+    console.log(store.state.sideBar.opened);
+}
     
 </script>
 <style lang="scss">

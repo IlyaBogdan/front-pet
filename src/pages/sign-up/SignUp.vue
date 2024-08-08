@@ -46,81 +46,65 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
 import { signUp } from '@/utils/api/auth/sign-up';
 import { Validator } from '@/utils/Validator';
-import { defineComponent, ref } from 'vue';
 import { ISignUpParams } from '@/utils/api/auth/sign-up/dto/request';
+import { ref } from 'vue';
 
-export default defineComponent({
-    setup() {
-        const email = ref<string | undefined>(undefined);
-        const password = ref<string | undefined>(undefined);
-        const passwordRepeat = ref<string | undefined>(undefined);
-        const firstName = ref<string | undefined>(undefined);
-        const lastName = ref<string | undefined>(undefined);
-        const passwordsEquals = ref(false);
-        const errors = ref<string[]>([]);
-        const loading = ref(false);
+const email = ref<string | undefined>(undefined);
+const password = ref<string | undefined>(undefined);
+const passwordRepeat = ref<string | undefined>(undefined);
+const firstName = ref<string | undefined>(undefined);
+const lastName = ref<string | undefined>(undefined);
+const passwordsEquals = ref(false);
+const errors = ref<string[]>([]);
+const loading = ref(false);
 
-        /**
-         * Validate parameters for registration, if some parameter
-         * is incorrect. Returns login payload
-         * 
-         * @returns {ISignUpParams}
-         */
-        const validate = (): ISignUpParams => {
-            errors.value = [];
-            const data = { 
-                email: email.value,
-                password: password.value,
-                first_name: firstName.value
-            };
-            const validationResult = Validator.payloadValidation(data);
-            if (Array.isArray(validationResult)) errors.value = errors.value.concat(validationResult);
-            if (password.value != passwordRepeat.value) errors.value.push('Passwords not equals');
+/**
+ * Validate parameters for registration, if some parameter
+ * is incorrect. Returns login payload
+ * 
+ * @returns {ISignUpParams}
+ */
+const validate = (): ISignUpParams => {
+    errors.value = [];
+    const data = { 
+        email: email.value,
+        password: password.value,
+        first_name: firstName.value
+    };
+    const validationResult = Validator.payloadValidation(data);
+    if (Array.isArray(validationResult)) errors.value = errors.value.concat(validationResult);
+    if (password.value != passwordRepeat.value) errors.value.push('Passwords not equals');
 
-            const result = { ...data, last_name: lastName.value } as ISignUpParams;
-            return result;
-        }
+    const result = { ...data, last_name: lastName.value } as ISignUpParams;
+    return result;
+}
 
-        /**
-         * Sign up handler
-         * 
-         * @returns {void}
-         */
-        const signUpHandle = (): void => {
-            const data: ISignUpParams = validate();
+/**
+ * Sign up handler
+ * 
+ * @returns {void}
+ */
+const signUpHandle = (): void => {
+    const data: ISignUpParams = validate();
 
-            if (!errors.value.length) {
-                loading.value = true;
-                signUp(data)
-                    .then(() => {
-                        window.location.href = '/personal';
-                    }, (signUpErrors) => {
-                        errors.value = signUpErrors;
-                    })
-                    .finally(() => {
-                        loading.value = false;
-                    });
-            }
-        };
-
-        return {
-            email,
-            password,
-            passwordRepeat,
-            firstName,
-            lastName,
-            passwordsEquals,
-            errors,
-            loading,
-            validate,
-            signUpHandle
-        };
+    if (!errors.value.length && passwordsEquals.value) {
+        loading.value = true;
+        signUp(data)
+            .then(() => {
+                window.location.href = '/personal';
+            }, (signUpErrors) => {
+                errors.value = signUpErrors;
+            })
+            .finally(() => {
+                loading.value = false;
+            });
     }
-});
+};
+
 </script>
 <style lang="scss" scoped>
     .sign-up {

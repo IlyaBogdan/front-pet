@@ -1,3 +1,6 @@
+/**
+ * Jest test framework setup
+ */
 class LocalStorageMock implements Storage {
     private store: { [key: string]: string } = {};
   

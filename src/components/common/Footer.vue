@@ -1,11 +1,11 @@
 <template lang="">
     <footer></footer>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import { defineComponent } from 'vue';
+import { defineOptions } from 'vue';
 
-export default defineComponent({
+defineOptions({
     name: 'FooterElement'
 });
 

@@ -10,11 +10,11 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import imgMixin from '@/mixins/img';
+<script setup lang="ts">
+import { useImgMixin } from '@/mixins/img';
 import { IMessage } from '@/models/IMessage';
 import { IUser } from '@/models/IUser';
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, defineProps } from 'vue';
 
 interface IDialogMessageProps {
 
@@ -36,48 +36,36 @@ interface IDialogMessageProperties extends IMessage {
     type: 'in' | 'out'
 }
 
-export default defineComponent({
-    name: "dialog-message",
-    mixins: [imgMixin],
-    setup(props: IDialogMessageProps) {
+const props = defineProps<IDialogMessageProps>();
 
-        const message = ref<IDialogMessageProperties | null>(null);
-        const nextAuthor = ref<IUser | undefined>(props.next);
+const message = ref<IDialogMessageProperties | null>(null);
+const nextAuthor = ref<IUser | undefined>(props.next);
+const { staticUrl } = useImgMixin();
 
-        onMounted(() => {
-            const type = nextUserIsEqual() ? 'out' : 'in';
-            message.value = { ...props.message, type };
-        })
+onMounted(() => {
+    const type = nextUserIsEqual() ? 'out' : 'in';
+    message.value = { ...props.message, type };
+})
 
-        const content = computed(() => {
-            const messageContent = message.value!.message;
-            const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
-            return messageContent.replace(urlRegex, function(url) {
-                return '<a href="' + url + '">' + url + '</a>';
-            });
-        });
-
-        const messageDate = (date: Date | string) => {
-            // TODO: add timezones
-            const messageDate = new Date(date);
-            const hours = `${messageDate.getHours()}`.length == 1 ? `0${messageDate.getHours()}` : `${messageDate.getHours()}`;
-            const minutes = `${messageDate.getMinutes()}`.length == 1 ? `0${messageDate.getMinutes()}` : `${messageDate.getMinutes()}`;
-            return `${hours}:${minutes}`;
-        };
-
-        const nextUserIsEqual = () => {
-            return nextAuthor.value && nextAuthor.value.id === message.value!.user!.id;
-        }
-
-        return {
-            message,
-            nextAuthor,
-            content,
-            messageDate,
-            nextUserIsEqual
-        }
-    }
+const content = computed(() => {
+    const messageContent = message.value!.message;
+    const urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+    return messageContent.replace(urlRegex, function(url) {
+        return '<a href="' + url + '">' + url + '</a>';
+    });
 });
+
+const messageDate = (date: Date | string) => {
+    // TODO: add timezones
+    const messageDate = new Date(date);
+    const hours = `${messageDate.getHours()}`.length == 1 ? `0${messageDate.getHours()}` : `${messageDate.getHours()}`;
+    const minutes = `${messageDate.getMinutes()}`.length == 1 ? `0${messageDate.getMinutes()}` : `${messageDate.getMinutes()}`;
+    return `${hours}:${minutes}`;
+};
+
+const nextUserIsEqual = () => {
+    return nextAuthor.value && nextAuthor.value.id === message.value!.user!.id;
+}
 
 </script>
 <style lang="scss">

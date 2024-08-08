@@ -7,33 +7,26 @@
         />
         <div v-if="online" class="online"></div>
     </div>
-    
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
 import noIcon from '@/assets/no-icon.png';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineProps, defineOptions, ref } from 'vue';
 
 interface IAvatarProps {
     avatar: string;
     online: boolean;
 }
 
-export default defineComponent({
-    name: 'avatar-icon',
-    setup(props: IAvatarProps) {
-        const online = ref(props.online);
-        const avatar = ref(props.avatar);
-        const getAvatar = computed(() => {
-            return avatar.value != '' ? avatar.value : noIcon;
-        });
+defineOptions({
+  name: 'avatar-icon'
+});
 
-        return {
-            getAvatar,
-            avatar,
-            online
-        }
-    }
+const props = defineProps<IAvatarProps>();
+const online = ref(props.online);
+const avatar = ref(props.avatar);
+const getAvatar = computed(() => {
+    return avatar.value != '' ? avatar.value : noIcon;
 });
 
 </script>

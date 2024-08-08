@@ -1,23 +1,22 @@
 <template>
     <dialog id="preloader" class="loader"></dialog>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 
-import { defineComponent, onMounted } from 'vue';
+import { defineOptions, onMounted } from 'vue';
 
 interface HTMLDialogElementExtended extends HTMLDialogElement {
   showModal: () => void;
   close: () => void;
 }
 
-export default defineComponent({
+defineOptions({
     name: 'pre-loader',
-    setup() {
-        onMounted(() => {
-            const element = document.getElementById('preloader')! as HTMLDialogElementExtended;
-            element.showModal();
-        });
-    }
+});
+
+onMounted(() => {
+    const element = document.getElementById('preloader')! as HTMLDialogElementExtended;
+    element.showModal();
 });
 
 </script>

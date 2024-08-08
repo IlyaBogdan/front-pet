@@ -15,53 +15,40 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 /**
  * TODO
  * 1) Open chat whit other users by link
  * 2) 
  */
 
-import chatMixin from '@/mixins/chat';
-import imgMixin from '@/mixins/img';
+import { useChatMixin } from '@/mixins/chat';
 import { IChat } from '@/models/IChat';
 import { IUser } from '@/models/IUser';
-import { defineComponent, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
-export default defineComponent({
-    components: {  },
-    mixins: [ chatMixin, imgMixin ],
-    name: "chat-element",
+const store = useStore();
+const user = ref<IUser | undefined>(undefined);
+const chats = ref<IChat[]>([]);
+const { connection, convertChatInfo } = useChatMixin();
 
-    setup() {
-        const store = useStore();
-        const user = ref<IUser | undefined>(undefined);
-        const chats = ref<IChat[]>([]);
-
-        onMounted(() => {
-            user.value = store.state.authModule.user;
-            chatMixin.connection.call('chatList', { user: user.value, token: localStorage.getItem('apiToken') });
-        });
-
-        /**
-         * Open chat with user
-         * 
-         * @param {IUser} dst oponent in chat
-         * @returns {void}
-         */
-        const openChat = (dst: IUser): void => {
-            const url = `/chat?user=${dst.id}`;
-            window.history.replaceState({}, '', url);
-        };
-
-        return {
-            user,
-            chats,
-            openChat
-        }
-    }
+onMounted(() => {
+    user.value = store.state.authModule.user;
+    connection.value!.call('chatList', { user: user.value, token: localStorage.getItem('apiToken') });
 });
+
+/**
+ * Open chat with user
+ * 
+ * @param {IUser} dst oponent in chat
+ * @returns {void}
+ */
+// const openChat = (dst: IUser): void => {
+//     const url = `/chat?user=${dst.id}`;
+//     window.history.replaceState({}, '', url);
+// };
+
 </script>
 
 <style lang="scss">

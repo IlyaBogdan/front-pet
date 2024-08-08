@@ -10,7 +10,7 @@ export abstract class WsConnection
     /**
      * Singletone instance
      */
-    protected static instance: WsConnection;
+    protected static instance: WsConnection | undefined;
 
     /**
      * Abstract methods list
@@ -31,6 +31,7 @@ export abstract class WsConnection
         if (WsConnection.instance) {
             return WsConnection.instance;
         }
+        console.log(process.env.VUE_APP_BROKER_CONNECTION!);
         
         this.connection = new WebSocket(process.env.VUE_APP_BROKER_CONNECTION!);        
     }
@@ -72,6 +73,7 @@ export abstract class WsConnection
 
     /**
      * Method for handling messages from broker
+     * TODO: interface for broker message
      * 
      * @returns {any} 
      */

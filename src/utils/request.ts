@@ -28,8 +28,6 @@ export const request = async (url: string, params: any, method: ESupportedMethod
     return fetch(`${BACKEND_URL}${url}`, initial).then(async (response) => { 
         if (response.ok) return response.json();
         else {
-            // eslint-disable-next-line no-debugger
-            debugger;
             if (response.status == 401) {
                 localStorage.removeItem('apiToken');
                 localStorage.removeItem('user');
