@@ -13,14 +13,14 @@ export abstract class WsConnection
     protected static instance: WsConnection | undefined;
 
     /**
-     * Abstract interceptor of broker messages
-     */
-    protected abstract interceptor: WsMessageInterceptor;
-
-    /**
      * Upstream websocket connection to broker
      */
     protected connection: WebSocket | undefined;
+
+    /**
+     * Abstract interceptor of broker messages
+     */
+    public abstract interceptor: WsMessageInterceptor;
 
     constructor() {
         if (WsConnection.instance) {
@@ -71,7 +71,7 @@ export abstract class WsConnection
      * 
      * @returns {any} 
      */
-    public intercept(): any
+    public intercept(): WsConnection
     {
         this.connection!.onmessage = (brokerMessage) => {
 

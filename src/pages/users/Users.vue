@@ -1,5 +1,8 @@
 <template lang="">
-    <div v-if="userList.length" class="user-list">
+    <div v-if="loading">
+
+    </div>
+    <div v-if="!loading && userList.length" class="user-list">
         <div v-for="(user, index) in userList" :key="index">
             <div class="user-list__item">
                 <avatar-icon :avatar="staticUrl(user?.avatar)"/>
@@ -13,7 +16,7 @@
             </div>
         </div>
     </div>
-    <div v-else class="user-list">
+    <div v-if="!loading && !userList.length" class="user-list">
         <div class="user-list__empty">
             <div class="main">No Users</div>
             <div class="description">Try later</div>
@@ -32,14 +35,18 @@ const userList = ref<Array<IUser>>([]);
 const { user, useInterceptor, useConnection } = useChatMixin();
 const { staticUrl } = useImgMixin();
 const store = useStore();
+const loading = ref(false);
 
 onMounted(() => {
+    loading.value = true;
     useConnection({ method: 'getUsers', user: user.value! });
 
     useInterceptor('setUserList', (brokerMessage) => {
+        console.log('intercept message', brokerMessage);
         const authUser = store.state.authModule.user;
         // eslint-disable-next-line
         userList.value = brokerMessage.users.filter((user: any) => user.id != authUser.id);
+        loading.value = false;
     });
 });
 

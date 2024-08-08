@@ -7,10 +7,11 @@ import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useImgMixin } from "./useImgMixin";
 import { TInterceptConfig } from "@/utils/connections/WsMessageInterceptor";
+import { WsConnection } from "@/utils/connections/WsConnection";
 
 export const useChatMixin = () => {
   const store = useStore();
-  const connection = ref<ChatConnection | undefined>(undefined);
+  const connection = ref<WsConnection | undefined>(undefined);
   const user = ref<IUser | undefined>(undefined);
   const online = ref(false);
   const { staticUrl } = useImgMixin();
@@ -28,12 +29,18 @@ export const useChatMixin = () => {
       connection.value.onOpen(() => {
 
         listeners.value.forEach((interceptConfig) => {
+          console.log('set interceptor');
+          console.log(interceptConfig);
           connection.value!.interceptor.setListener(interceptConfig);
         });
+        listeners.value = [];
 
         callQuee.value.forEach((callParams) => {
+          console.log('call');
+          console.log(callParams);
           useConnection(callParams);
         });
+        callQuee.value = [];
 
         online.value = true;
         const apiToken = localStorage.getItem("apiToken");
@@ -91,9 +98,7 @@ export const useChatMixin = () => {
    * @callback any incomming messages nandler
    * @returns {void}
    */
-  const useInterceptor = (method: string, handler: (...args: any[]) => any) => {
-    listeners.value.push({ method, handler });
-
+  const useInterceptor = (method: string, handler: (arg: any) => any) => {
     if (connection.value) {
       connection.value.interceptor.setListener({ method, handler });
     }
@@ -102,8 +107,6 @@ export const useChatMixin = () => {
   const useConnection = (callParams: any) => {
     if (connection.value) {
       connection.value.call(callParams);
-    } else {
-      callQuee.value.push(callParams);
     }
   }
 
