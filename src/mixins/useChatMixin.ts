@@ -38,7 +38,7 @@ export const useChatMixin = () => {
         online.value = true;
         const apiToken = localStorage.getItem("apiToken");
         if (apiToken) {
-          connection.value!.pull({ token: apiToken, user: user.value! });
+          useConnection({ method: 'pull', token: apiToken, user: user.value! });
         }
       }).onClose(() => {
         online.value = false;

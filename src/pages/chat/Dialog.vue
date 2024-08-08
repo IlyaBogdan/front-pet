@@ -66,8 +66,7 @@ const chat = ref<TDialogProperties | undefined>(undefined);
 const typingUsers = ref<number[]>([]);
 const messagesContainer = ref<HTMLElement | null>(null);
 const { staticUrl } = useImgMixin();
-// eslint-disable-next-line
-const { connection, useInterceptor } = useChatMixin();
+const { useConnection, useInterceptor } = useChatMixin();
 const router = useRouter();
 
 onMounted(() => {
@@ -76,9 +75,15 @@ onMounted(() => {
     const userId = parseInt(route.query.user as string);
 
     if (chatId) {
-        //connection!.getChat({ chat: { id: chatId } });
+        useConnection({ 
+            method: 'getChat',
+            chat: { id: chatId }
+        });
     } else if (userId) {
-        //connection!.createChat({ users: [user.value!.id, userId] });
+        useConnection({ 
+            method: 'createChat',
+            users: [user.value!.id, userId]
+        });
     }
 
     useInterceptor('activeChat', (brokerMessage) => {
@@ -128,7 +133,7 @@ const chatInfo = computed(() => {
             if (oponentOnline) info.online.push(oponent.id);
             if (oponentTyping) info.typing.push(oponent.id);
 
-            //connection!.getOnlineUsers({ users: [oponent.id] });
+            //useConnection.({ method: 'getOnlineUsers', users: [oponent.id] });
         }
     }
 
@@ -164,13 +169,17 @@ const nextAuthor = (messageIndex: number): IUser | undefined => {
  * @returns {void}
  */
 const send = (message: string): void => {
-    // eslint-disable-next-line
     const messageFormated = {
         date: new Date(),
         message,
         author: user.value
     }
-    //connection!.sendMessage({ chat: chat.value, message: messageFormated });
+    
+    useConnection({ 
+        method: 'sendMessage',
+        chat: chat.value,
+        message: messageFormated
+    });
 };
 
 /**
@@ -179,9 +188,13 @@ const send = (message: string): void => {
  * @param {boolean} typing
  * @returns {void}
  */
-// eslint-disable-next-line
 const setTyping = (typing: boolean): void => {
-    //connection!.setTyping({ chat: chat.value, user: user.value, typing });
+    useConnection({
+        method: 'setTyping',
+        chat: chat.value,
+        user: user.value,
+        typing
+    });
 };
 
 const scrollToLastMessage = () => {

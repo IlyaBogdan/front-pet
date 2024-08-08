@@ -31,17 +31,19 @@ import { useStore } from 'vuex';
 const store = useStore();
 const user = ref<IUser | undefined>(undefined);
 const chats = ref<IChat[]>([]);
-const { connection, convertChatInfo, useInterceptor } = useChatMixin();
+const { useConnection, convertChatInfo, useInterceptor } = useChatMixin();
 
 onMounted(() => {
     user.value = store.state.authModule.user;
-    connection!.chatList({
+    useConnection({
+        method: 'chatList',
         user: user.value!,
         token: localStorage.getItem('apiToken')
     });
 
     useInterceptor('pull', () => {
-        connection!.pull({ 
+        useConnection({
+            method: 'pull',
             user: user.value!
         });
     });
