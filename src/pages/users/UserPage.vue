@@ -29,7 +29,7 @@
 <script setup lang="ts">
 
 import { getUserProfile } from '@/utils/api/user/profile';
-import { useImgMixin } from '@/mixins/img';
+import { useImgMixin } from '@/mixins/useImgMixin';
 import { onMounted, ref } from 'vue';
 import { IUser } from '@/models/IUser';
 import { IUserProfileInfo } from '@/utils/api/user/profile/dto/response';

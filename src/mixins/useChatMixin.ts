@@ -5,7 +5,7 @@ import { IChatInfo } from "@/models/IChatInfo";
 import { IMessage } from "@/models/IMessage";
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
-import { useImgMixin } from "./img";
+import { useImgMixin } from "./useImgMixin";
 
 export const useChatMixin = () => {
   const store = useStore();

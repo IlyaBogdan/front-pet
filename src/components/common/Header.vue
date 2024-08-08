@@ -36,7 +36,7 @@ import { logout } from "@/utils/api/auth/logout";
 import LogoFull from "./Logo.vue";
 import { computed, defineOptions } from 'vue';
 import { useStore } from "vuex";
-import { useImgMixin } from "@/mixins/img";
+import { useImgMixin } from "@/mixins/useImgMixin";
 
 defineOptions({
     name: "HeaderElement"

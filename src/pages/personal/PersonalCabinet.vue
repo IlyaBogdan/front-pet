@@ -45,7 +45,7 @@
 
 import { ref, computed, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { useImgMixin } from '@/mixins/img';
+import { useImgMixin } from '@/mixins/useImgMixin';
 import { getAuthUserInfo, updateProfile } from '@/utils/api/user/profile';
 import { IUser } from '@/models/IUser';
 

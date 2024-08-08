@@ -31,8 +31,8 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import DialogMessage from './components/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField.vue';
-import { useChatMixin } from '@/mixins/chat';
-import { useImgMixin } from '@/mixins/img';
+import { useChatMixin } from '@/mixins/useChatMixin';
+import { useImgMixin } from '@/mixins/useImgMixin';
 import { EChatTypes, IChat } from '@/models/IChat';
 import { useStore } from 'vuex';
 import { IUser } from '@/models/IUser';

@@ -22,7 +22,7 @@
  * 2) 
  */
 
-import { useChatMixin } from '@/mixins/chat';
+import { useChatMixin } from '@/mixins/useChatMixin';
 import { IChat } from '@/models/IChat';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
