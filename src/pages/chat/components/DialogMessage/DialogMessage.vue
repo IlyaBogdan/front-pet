@@ -23,7 +23,7 @@ const nextAuthor = ref<IUser | undefined>(props.next);
 const { staticUrl } = useImgMixin();
 
 onMounted(() => {
-    const type = nextUserIsEqual ? 'out' : 'in';
+    const type = nextUserIsEqual.value ? 'out' : 'in';
     message.value = { ...props.message, type };
 })
 
