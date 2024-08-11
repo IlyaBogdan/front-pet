@@ -2,45 +2,35 @@ import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
 import { IUser } from "@/models/IUser";
 import { IChat } from "@/models/IChat";
 import { IChatInfo } from "@/models/IChatInfo";
-import { IMessage } from "@/models/IMessage";
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useImgMixin } from "./useImgMixin";
-import { TInterceptConfig } from "@/utils/connections/WsMessageInterceptor";
 import { WsConnection } from "@/utils/connections/WsConnection";
 
+/**
+ * Mixin for chat methods and data
+ */
 export const useChatMixin = () => {
   const store = useStore();
   const connection = ref<WsConnection | undefined>(undefined);
   const user = ref<IUser | undefined>(undefined);
   const online = ref(false);
   const { staticUrl } = useImgMixin();
-  const listeners = ref<TInterceptConfig[]>([]);
-  const callQuee = ref<any[]>([]);
 
   onMounted(() => {
     user.value = store.state.authModule.user;
     interceptConnection();
   });
   
+  /**
+   * Main function for running chat websocket connection
+   * 
+   * @returns {void}
+   */
   const interceptConnection = () => {
     connection.value = new ChatConnection().intercept();
     if (connection.value) {
       connection.value.onOpen(() => {
-
-        listeners.value.forEach((interceptConfig) => {
-          console.log('set interceptor');
-          console.log(interceptConfig);
-          connection.value!.interceptor.setListener(interceptConfig);
-        });
-        listeners.value = [];
-
-        callQuee.value.forEach((callParams) => {
-          console.log('call');
-          console.log(callParams);
-          useConnection(callParams);
-        });
-        callQuee.value = [];
 
         online.value = true;
         const apiToken = localStorage.getItem("apiToken");
@@ -89,7 +79,13 @@ export const useChatMixin = () => {
     }
   }
 
-  const useConnection = (callParams: any) => {
+  /**
+   * Hook for calling methods for chat broker
+   * 
+   * @param {any} callParams 
+   * @returns {void}
+   */
+  const useConnection = (callParams: any): void => {
     if (connection.value) {
       connection.value.call(callParams);
     }

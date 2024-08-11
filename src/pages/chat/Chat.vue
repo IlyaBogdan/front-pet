@@ -1,6 +1,6 @@
 <template>
     <div class="chat-list" v-if="chats && chats.length">
-        <div class="chat" v-for="(chat, index) in chats.map(chat => convertChatInfo(chat))" :key="index">
+        <div class="chat" v-for="(chat, index) in chats" :key="index">
             <avatar-icon class="chat-image" :avatar="chat.avatar" />
             <div class="chat-info">
                 <div>{{ chat.title }}</div>
@@ -19,13 +19,14 @@
 
 import { useChatMixin } from '@/mixins/useChatMixin';
 import { IChat } from '@/models/IChat';
+import { IChatInfo } from '@/models/IChatInfo';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
 const user = ref<IUser | undefined>(undefined);
-const chats = ref<IChat[]>([]);
+const chats = ref<IChatInfo[]>([]);
 const { useConnection, convertChatInfo, useInterceptor } = useChatMixin();
 
 onMounted(() => {
@@ -48,7 +49,7 @@ onMounted(() => {
     });
 
     useInterceptor('userDialogs', (brokerMessage) => {
-        chats.value = brokerMessage.body.chats;
+        chats.value = brokerMessage.body.chats.map((chat: IChat) => convertChatInfo(chat));
     });
 });
 

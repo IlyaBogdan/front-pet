@@ -29,8 +29,8 @@
 <script setup lang="ts">
 
 import { computed, onMounted, ref, watch } from 'vue';
-import DialogMessage from './components/DialogMessage.vue';
-import SendMessageField from './components/SendMessageField.vue';
+import DialogMessage from './components/DialogMessage/DialogMessage.vue';
+import SendMessageField from './components/SendMessageField/SendMessageField.vue';
 import { useChatMixin } from '@/mixins/useChatMixin';
 import { useImgMixin } from '@/mixins/useImgMixin';
 import { EChatTypes } from '@/models/IChat';

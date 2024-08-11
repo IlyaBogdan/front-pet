@@ -3,6 +3,7 @@ import { IUser } from "./IUser";
 export interface IMessage {
     /**
      * Message ID
+     * @example 1
      */
     id: number;
 

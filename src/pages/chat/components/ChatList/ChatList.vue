@@ -12,19 +12,13 @@
 <script setup lang="ts">
 import { IUser } from '@/models/IUser';
 import { defineOptions, defineProps, ref } from 'vue';
-
-interface IChatListProps {
-    /**
-     * List of users
-     */
-    users: IUser[]
-}
+import { TChatListProps } from './props';
 
 defineOptions({
     name: "chat-list",
 });
 
-const props = defineProps<IChatListProps>();
+const props = defineProps<TChatListProps>();
 const users = ref<IUser[]>(props.users);
 
 </script>

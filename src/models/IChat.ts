@@ -1,6 +1,9 @@
 import { IMessage } from "./IMessage";
 import { IUser } from "./IUser";
 
+/**
+ * Chat types enum
+ */
 export enum EChatTypes {
     /**
      * Dialog between 2 users
@@ -13,6 +16,9 @@ export enum EChatTypes {
     CONFERENCE = 1
 };
 
+/**
+ * Represents information about chat
+ */
 export interface IChat {
 
     /**
