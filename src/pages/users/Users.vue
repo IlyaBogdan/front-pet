@@ -25,8 +25,8 @@
 </template>
 <script setup lang="ts">
 
-import { useChatMixin } from '@/mixins/useChatMixin';
-import { useImgMixin } from '@/mixins/useImgMixin';
+import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
+import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';

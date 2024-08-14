@@ -31,14 +31,14 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import DialogMessage from './components/DialogMessage/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField/SendMessageField.vue';
-import { useChatMixin } from '@/mixins/useChatMixin';
-import { useImgMixin } from '@/mixins/useImgMixin';
-import { EChatTypes } from '@/models/IChat';
+import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
+import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
+import { EChatTypes } from '@chat/models/IChat';
 import { useStore } from 'vuex';
 import { IUser } from '@/models/IUser';
 import { useRoute, useRouter } from 'vue-router';
-import { TActiveChat, TUserTyping } from '@/utils/connections/chat/responses';
-import { IChatInfo, IMessageInfo } from '@/models/IChatInfo';
+import { TActiveChat, TUserTyping } from '@/modules/chat/connections/chat/responses';
+import { IChatInfo, IMessageInfo } from '@chat/models/IChatInfo';
 
 const store = useStore();
 const route = useRoute();
@@ -69,7 +69,7 @@ onMounted(() => {
 
     useInterceptor('activeChat', (brokerMessage: TActiveChat) => {
         chat.value = brokerMessage.chat;
-        chat.value.messages.forEach((message: IMessageInfo) => {
+        chat.value!.messages.forEach((message: IMessageInfo) => {
             if (message.user!.id == user.value!.id) message.type = 'out';
             else message.type = 'in';
         });

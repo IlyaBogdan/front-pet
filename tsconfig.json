@@ -15,7 +15,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@common/*": ["src/components/common/*"]
+      "@modules/*": ["src/modules"],
+      "@shared/*": ["src/modules/__shared__"],
+      "@chat/*": ["src/modules/chat/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

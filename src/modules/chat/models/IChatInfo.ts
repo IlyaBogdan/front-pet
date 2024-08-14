@@ -1,6 +1,6 @@
+import { IUser } from "@/models/IUser";
 import { IChat } from "./IChat";
 import { IMessage } from "./IMessage";
-import { IUser } from "./IUser";
 
 /**
  * Represents extended message info for dialog
@@ -13,7 +13,6 @@ export interface IMessageInfo extends IMessage {
      */
     type?: 'in' | 'out'
 }
-
 
 /**
  * Represents extended chat information for dialog

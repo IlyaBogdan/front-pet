@@ -12,6 +12,9 @@ module.exports = defineConfig({
       extensions: ['.ts', '.js', '.vue', '.json'],
       alias: {
         '@': require('path').resolve(__dirname, 'src'),
+        '@modules': require('path').resolve(__dirname, 'src/modules'),
+        '@shared': require('path').resolve(__dirname, 'src/modules/__shared__'),
+        '@chat': require('path').resolve(__dirname, 'src/modules/chat'),
       },
     },
     module: {

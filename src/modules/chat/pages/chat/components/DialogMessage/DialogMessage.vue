@@ -11,7 +11,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useImgMixin } from '@/mixins/useImgMixin';
+import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
 import { IMessageInfo } from '@/models/IChatInfo';
 import { IUser } from '@/models/IUser';
 import { computed, onMounted, ref, defineProps } from 'vue';

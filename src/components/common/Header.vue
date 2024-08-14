@@ -32,11 +32,11 @@
 </template>
 <script setup lang="ts">
 
-import { logout } from "@/utils/api/auth/logout";
+import { logout } from "@/modules/auth/api/auth/logout";
 import LogoFull from "./Logo.vue";
 import { computed, defineOptions } from 'vue';
 import { useStore } from "vuex";
-import { useImgMixin } from "@/mixins/useImgMixin";
+import { useImgMixin } from "@/modules/__shared__/mixins/useImgMixin";
 
 defineOptions({
     name: "HeaderElement"

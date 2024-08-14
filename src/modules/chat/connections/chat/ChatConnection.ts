@@ -1,5 +1,6 @@
-import { WsConnection } from "../WsConnection";
+import { WsConnection } from "../../../../utils/connections/WsConnection";
 import { ChatInterceptor } from "./ChatInterceptor";
+
     
 /**
  * Module for sending websocket messages to chat broker

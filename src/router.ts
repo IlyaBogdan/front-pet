@@ -5,8 +5,8 @@ import PersonalCabinet from '@/pages/personal/PersonalCabinet.vue';
 import SignIn from '@/pages/sign-in/SignIn.vue';
 import SignUp from '@/pages/sign-up/SignUp.vue';
 
-import Chat from '@/pages/chat/Chat.vue';
-import Dialog from '@/pages/chat/Dialog.vue';
+import Chat from '@/modules/chat/pages/chat/Chat.vue';
+import Dialog from '@/modules/chat/pages/chat/Dialog.vue';
 
 import Users from '@/pages/users/Users.vue';
 import UserPage from '@/pages/users/UserPage.vue';

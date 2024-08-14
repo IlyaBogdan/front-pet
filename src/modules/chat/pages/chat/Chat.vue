@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-import { useChatMixin } from '@/mixins/useChatMixin';
+import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
 import { IChat } from '@/models/IChat';
 import { IChatInfo } from '@/models/IChatInfo';
 import { IUser } from '@/models/IUser';

@@ -1,5 +1,5 @@
+import { IUser } from "@/models/IUser";
 import { IMessage } from "./IMessage";
-import { IUser } from "./IUser";
 
 /**
  * Chat types enum

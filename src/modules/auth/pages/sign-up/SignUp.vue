@@ -48,9 +48,9 @@
 </template>
 <script setup lang="ts">
 
-import { signUp } from '@/utils/api/auth/sign-up';
+import { signUp } from '@/modules/auth/api/auth/sign-up';
 import { Validator } from '@/utils/Validator';
-import { ISignUpParams } from '@/utils/api/auth/sign-up/dto/request';
+import { ISignUpParams } from '@/modules/auth/api/auth/sign-up/dto/request';
 import { ref } from 'vue';
 
 const email = ref<string | undefined>(undefined);

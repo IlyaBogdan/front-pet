@@ -1,5 +1,5 @@
 import { IUser } from "@/models/IUser";
-import { IBrokerMessagePayload } from "../message";
+import { IBrokerMessagePayload } from "../../../../utils/connections/message";
 
 export type TSendMessageParams = IBrokerMessagePayload & {
     method: 'sendMessage',

@@ -1,4 +1,4 @@
-import { WsMessageInterceptor } from '../WsMessageInterceptor';
+import { WsMessageInterceptor } from '../../../../utils/connections/WsMessageInterceptor';
 
 /**
  * Module for intercepting chat broker messages

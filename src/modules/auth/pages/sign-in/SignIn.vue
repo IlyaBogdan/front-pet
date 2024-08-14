@@ -27,8 +27,8 @@
 </template>
 <script setup lang="ts">
 
-import { login } from '@/utils/api/auth/login';
-import { ILoginParams } from '@/utils/api/auth/login/dto/request';
+import { login } from '@/modules/auth/api/auth/login';
+import { ILoginParams } from '@/modules/auth/api/auth/login/dto/request';
 import { Validator } from '@/utils/Validator';
 import { ref } from 'vue';
 

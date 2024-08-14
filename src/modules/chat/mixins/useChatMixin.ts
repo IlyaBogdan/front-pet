@@ -1,10 +1,10 @@
-import { ChatConnection } from "@/utils/connections/chat/ChatConnection";
+import { ChatConnection } from "@/modules/chat/connections/chat/ChatConnection";
 import { IUser } from "@/models/IUser";
-import { IChat } from "@/models/IChat";
-import { IChatInfo } from "@/models/IChatInfo";
+import { IChat } from "@chat/models/IChat";
+import { IChatInfo } from '@chat/models/IChatInfo';
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
-import { useImgMixin } from "./useImgMixin";
+import { useImgMixin } from "../../__shared__/mixins/useImgMixin";
 import { WsConnection } from "@/utils/connections/WsConnection";
 
 /**
