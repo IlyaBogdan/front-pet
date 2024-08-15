@@ -11,8 +11,8 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
-import { IMessageInfo } from '@/models/IChatInfo';
+import { useImgMixin } from '@shared/mixins/useImgMixin';
+import { IMessageInfo } from '@chat/models/IChatInfo';
 import { IUser } from '@/models/IUser';
 import { computed, onMounted, ref, defineProps } from 'vue';
 import { TDialogMessageProps } from './props';

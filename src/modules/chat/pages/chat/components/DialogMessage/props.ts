@@ -1,4 +1,4 @@
-import { IMessage } from "@/models/IMessage";
+import { IMessage } from "@chat/models/IMessage";
 import { IUser } from "@/models/IUser";
 
 /**

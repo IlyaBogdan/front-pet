@@ -16,8 +16,11 @@
     "paths": {
       "@/*": ["src/*"],
       "@modules/*": ["src/modules"],
-      "@shared/*": ["src/modules/__shared__"],
+      "@shared/*": ["src/modules/__shared__/*"],
+      "@home/*": ["src/modules/home/*"],
       "@chat/*": ["src/modules/chat/*"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@personal/*": ["src/modules/personal/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

@@ -1,17 +1,18 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import Home from '@/pages/home/Home.vue';
-import PersonalCabinet from '@/pages/personal/PersonalCabinet.vue';
-import SignIn from '@/pages/sign-in/SignIn.vue';
-import SignUp from '@/pages/sign-up/SignUp.vue';
+import PersonalCabinet from '@personal/pages/personal/PersonalCabinet.vue';
+import SignIn from '@auth/pages/sign-in/SignIn.vue';
+import SignUp from '@auth/pages/sign-up/SignUp.vue';
 
-import Chat from '@/modules/chat/pages/chat/Chat.vue';
-import Dialog from '@/modules/chat/pages/chat/Dialog.vue';
+import Chat from '@chat/pages/chat/Chat.vue';
+import Dialog from '@chat/pages/chat/Dialog.vue';
 
-import Users from '@/pages/users/Users.vue';
-import UserPage from '@/pages/users/UserPage.vue';
+import Home from '@home/pages/home/Home.vue';
+import Users from '@home/pages/users/Users.vue';
+import UserPage from '@home/pages/users/UserPage.vue';
 
 import NotFound from '@/pages/NotFoundPage.vue';
+
 import { auth } from './middleware/auth';
 
 type RouteState = RouteRecordRaw & {

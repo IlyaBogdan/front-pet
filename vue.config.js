@@ -14,7 +14,10 @@ module.exports = defineConfig({
         '@': require('path').resolve(__dirname, 'src'),
         '@modules': require('path').resolve(__dirname, 'src/modules'),
         '@shared': require('path').resolve(__dirname, 'src/modules/__shared__'),
+        '@home': require('path').resolve(__dirname, 'src/modules/home'),
         '@chat': require('path').resolve(__dirname, 'src/modules/chat'),
+        '@auth': require('path').resolve(__dirname, 'src/modules/auth'),
+        '@personal': require('path').resolve(__dirname, 'src/modules/personal'),
       },
     },
     module: {

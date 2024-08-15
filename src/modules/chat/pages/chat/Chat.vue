@@ -18,8 +18,8 @@
 <script setup lang="ts">
 
 import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
-import { IChat } from '@/models/IChat';
-import { IChatInfo } from '@/models/IChatInfo';
+import { IChat } from '@chat/models/IChat';
+import { IChatInfo } from '@chat/models/IChatInfo';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
