@@ -4,12 +4,12 @@ import PersonalCabinet from '@personal/pages/personal/PersonalCabinet.vue';
 import SignIn from '@auth/pages/sign-in/SignIn.vue';
 import SignUp from '@auth/pages/sign-up/SignUp.vue';
 
+import Home from '@home/pages/home/Home.vue';
+
 import Chat from '@chat/pages/chat/Chat.vue';
 import Dialog from '@chat/pages/chat/Dialog.vue';
-
-import Home from '@home/pages/home/Home.vue';
-import Users from '@home/pages/users/Users.vue';
-import UserPage from '@home/pages/users/UserPage.vue';
+import Users from '@chat/pages/users/Users.vue';
+import UserPage from '@chat/pages/users/UserPage.vue';
 
 import NotFound from '@/pages/NotFoundPage.vue';
 

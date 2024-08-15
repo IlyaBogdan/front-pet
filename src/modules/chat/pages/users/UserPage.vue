@@ -28,11 +28,11 @@
 </template>
 <script setup lang="ts">
 
-import { getUserProfile } from '@/modules/personal/api/user/profile';
-import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
+import { getUserProfile } from '@personal/api/user/profile';
+import { useImgMixin } from '@shared/mixins/useImgMixin';
 import { onMounted, ref } from 'vue';
 import { IUser } from '@/models/IUser';
-import { IUserProfileInfo } from '@/modules/personal/api/user/profile/dto/response';
+import { IUserProfileInfo } from '@personal/api/user/profile/dto/response';
 import { useRoute } from 'vue-router';
   
 const route = useRoute();

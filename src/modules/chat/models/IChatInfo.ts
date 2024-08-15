@@ -23,13 +23,13 @@ export interface IChatInfo extends IChat {
      * Chat title
      * @example 'Chat with friends'
      */
-    title?: string;
+    title: string;
 
     /**
      * Avatar URL on backend public folder
      * @example '/'
      */
-    avatar?: string;
+    avatar: string;
 
     /**
      * List of online user`s ID 
@@ -39,7 +39,7 @@ export interface IChatInfo extends IChat {
     /**
      * List of typing users in dialog
      */
-    typing?: IUser[];
+    typing: IUser[];
 
     /**
      * Short title of chat

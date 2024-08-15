@@ -1,11 +1,11 @@
-import { ChatConnection } from "@/modules/chat/connections/chat/ChatConnection";
-import { IUser } from "@/models/IUser";
-import { IChat } from "@chat/models/IChat";
+import { ChatConnection } from '@/modules/chat/connections/chat/ChatConnection';
+import { IUser } from '@/models/IUser';
+import { IChat } from '@chat/models/IChat';
 import { IChatInfo } from '@chat/models/IChatInfo';
-import { ref, onMounted } from "vue";
-import { useStore } from "vuex";
-import { useImgMixin } from "../../__shared__/mixins/useImgMixin";
-import { WsConnection } from "@/utils/connections/WsConnection";
+import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useImgMixin } from '@shared/mixins/useImgMixin';
+import { WsConnection } from '@/utils/connections/WsConnection';
 
 /**
  * Mixin for chat methods and data
@@ -43,27 +43,47 @@ export const useChatMixin = () => {
     }
   };
 
-  const convertChatInfo = (chat: IChat): IChatInfo => {
-    const chatInfo: IChatInfo = { ...chat, online: [] };
+  /**
+   * Returns online user status in list
+   * @param {IUser} user user information
+   * @returns {boolean}
+   * 
+   * TODO: later move it to shared mixin
+   */
+  const onlineStatus = (user: IUser, onlineIdList: number[]): boolean => {
+    return onlineIdList.includes(user.id);
+  }
 
-    if (chat.type === 0) {
-      const opponent = chat.users.filter(
-        (chatUser) => chatUser.id !== user.value?.id
-      )[0];
-      if (opponent) {
-        chatInfo.id = opponent.id;
-        chatInfo.title = `${opponent.first_name} ${opponent.last_name}`;
-        chatInfo.avatar = staticUrl(opponent.avatar);
-        chatInfo.shortName = opponent.first_name;
-
-        // this.connection.call('getOnlineUsers', { users: [opponent.id] });
+  const convertChatInfo = (chat: IChat | undefined): IChatInfo | undefined => {
+    if (chat) {
+      const chatInfo: IChatInfo = { 
+        ...chat,
+        typing: [],
+        online: [],
+        avatar: '',
+        title: ''
+      };
+      const apiToken = localStorage.getItem("apiToken");
+  
+      if (chat.type === 0) {
+        const opponent = chat.users.filter(
+          (chatUser) => chatUser.id !== user.value?.id
+        )[0];
+        if (opponent) {
+          chatInfo.id = opponent.id;
+          chatInfo.title = `${opponent.first_name} ${opponent.last_name}`;
+          chatInfo.avatar = staticUrl(opponent.avatar);
+          chatInfo.shortName = opponent.first_name;
+  
+          useConnection({method: 'getOnlineUsers', token: apiToken, users: [opponent.id] });
+        }
+      } else if (chat.type === 1) {
+        chatInfo.title = 'chat';
+        // @ts-ignore
+        chatInfo.avatar = ''; // Обработай avatar более корректно
       }
-    } else if (chat.type === 1) {
-      chatInfo.title = "chat";
-      // @ts-ignore
-      chatInfo.avatar = this.avatar; // Обработай avatar более корректно
+      return chatInfo;
     }
-    return chatInfo;
   };
 
   /**
@@ -96,6 +116,7 @@ export const useChatMixin = () => {
     online,
     convertChatInfo,
     useInterceptor,
-    useConnection
+    useConnection,
+    onlineStatus
   };
 };

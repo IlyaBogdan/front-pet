@@ -31,13 +31,11 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import DialogMessage from './components/DialogMessage/DialogMessage.vue';
 import SendMessageField from './components/SendMessageField/SendMessageField.vue';
-import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
-import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
-import { EChatTypes } from '@chat/models/IChat';
+import { useChatMixin } from '@chat/mixins/useChatMixin';
 import { useStore } from 'vuex';
 import { IUser } from '@/models/IUser';
 import { useRoute, useRouter } from 'vue-router';
-import { TActiveChat, TUserTyping } from '@/modules/chat/connections/chat/responses';
+import { TActiveChat, TUserTyping } from '@chat/connections/chat/responses';
 import { IChatInfo, IMessageInfo } from '@chat/models/IChatInfo';
 
 const store = useStore();
@@ -46,8 +44,7 @@ const user = ref<IUser | undefined>(undefined);
 const chat = ref<IChatInfo | undefined>(undefined);
 const typingUsers = ref<number[]>([]);
 const messagesContainer = ref<HTMLElement | null>(null);
-const { staticUrl } = useImgMixin();
-const { useConnection, useInterceptor } = useChatMixin();
+const { useConnection, useInterceptor, convertChatInfo } = useChatMixin();
 const router = useRouter();
 
 onMounted(() => {
@@ -94,33 +91,7 @@ onMounted(() => {
  * @returns {IChatInfo}
  */
 const chatInfo = computed(() => {
-    const info: IChatInfo = {
-        id: 0,
-        type: EChatTypes.DIALOG,
-        users: [],
-        messages: [],
-        online: [],
-        typing: []
-    };
-    if (chat.value) {
-        if (chat.value.type == EChatTypes.DIALOG) {
-            const oponent = chat.value.users.filter((chatUser) => chatUser.id !== user.value!.id)[0];
-            info.id = oponent.id;
-            info.title = `${oponent.first_name} ${oponent.last_name}`;
-            info.avatar = staticUrl(oponent.avatar);
-            info.shortName = oponent.first_name;
-
-            const oponentOnline = chat.value.online.indexOf(oponent.id) !== -1;
-            const oponentTyping = typingUsers.value.filter((userId) => oponent.id === userId);
-
-            if (oponentOnline) info.online.push(oponent.id);
-            if (oponentTyping) info.typing!.push(oponent);
-
-            //useConnection.({ method: 'getOnlineUsers', users: [oponent.id] });
-        }
-    }
-
-    return info;
+    return convertChatInfo(chat.value);
 });
 
 const typingStatus = computed(() => {

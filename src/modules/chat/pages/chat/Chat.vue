@@ -1,7 +1,7 @@
 <template>
-    <div class="chat-list" v-if="chats && chats.length">
+    <div class="chat-list" v-if="chats.length">
         <div class="chat" v-for="(chat, index) in chats" :key="index">
-            <avatar-icon class="chat-image" :avatar="chat.avatar" />
+            <avatar-icon class="chat-image" :avatar="chat.avatar" :online="getOnline(chat)"/>
             <div class="chat-info">
                 <div>{{ chat.title }}</div>
                 <router-link :to="`/dialog?id=${chat.id}`">Message</router-link>
@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
 
-import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
-import { IChat } from '@chat/models/IChat';
+import { useChatMixin } from '@chat/mixins/useChatMixin';
+import { IChat, EChatTypes } from '@chat/models/IChat';
 import { IChatInfo } from '@chat/models/IChatInfo';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
@@ -26,8 +26,9 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 const user = ref<IUser | undefined>(undefined);
+const online = ref<number[]>([]);
 const chats = ref<IChatInfo[]>([]);
-const { useConnection, convertChatInfo, useInterceptor } = useChatMixin();
+const { useConnection, convertChatInfo, useInterceptor, onlineStatus } = useChatMixin();
 
 onMounted(() => {
     user.value = store.state.authModule.user;
@@ -44,25 +45,29 @@ onMounted(() => {
         });
     });
 
-    useInterceptor('setUser', (brokerMessage) => {
-        chats.value = brokerMessage.body.chats;
+    useInterceptor('userDialogs', (brokerMessage) => {
+        chats.value = brokerMessage.chats.map((chat: IChat) => convertChatInfo(chat)!);
     });
 
-    useInterceptor('userDialogs', (brokerMessage) => {
-        chats.value = brokerMessage.body.chats.map((chat: IChat) => convertChatInfo(chat));
+    useInterceptor('usersOnline', (brokerMessage) => {
+        online.value = brokerMessage.users.map((user: IUser) => user.id);
     });
 });
 
 /**
- * Open chat with user
+ * Returns online status for chat
  * 
- * @param {IUser} dst oponent in chat
- * @returns {void}
+ * @param {IChatInfo} chat extended information about chat 
+ * @returns {boolean}
  */
-// const openChat = (dst: IUser): void => {
-//     const url = `/chat?user=${dst.id}`;
-//     window.history.replaceState({}, '', url);
-// };
+const getOnline = (chat: IChatInfo): boolean => {
+    if (chat.type == EChatTypes.DIALOG) {
+        const oponent = chat.users.filter((chatUser: IUser) => chatUser.id !== user.value!.id)[0];
+        return onlineStatus(oponent, online.value);
+    }
+
+    return false;
+}
 
 </script>
 

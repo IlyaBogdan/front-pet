@@ -26,12 +26,13 @@
 <script setup lang="ts">
 
 import { useChatMixin } from '@/modules/chat/mixins/useChatMixin';
-import { useImgMixin } from '@/modules/__shared__/mixins/useImgMixin';
+import { useImgMixin } from '@shared/mixins/useImgMixin';
 import { IUser } from '@/models/IUser';
 import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 
-const userList = ref<Array<IUser>>([]);
+const userList = ref<IUser[]>([]);
+const online = ref<number[]>([]);
 const { user, useInterceptor, useConnection } = useChatMixin();
 const { staticUrl } = useImgMixin();
 const store = useStore();
@@ -42,11 +43,13 @@ onMounted(() => {
     useConnection({ method: 'getUsers', user: user.value! });
 
     useInterceptor('setUserList', (brokerMessage) => {
-        console.log('intercept message', brokerMessage);
         const authUser = store.state.authModule.user;
-        // eslint-disable-next-line
-        userList.value = brokerMessage.users.filter((user: any) => user.id != authUser.id);
+        userList.value = brokerMessage.users.filter((user: IUser) => user.id != authUser.id);
         loading.value = false;
+    });
+
+    useInterceptor('usersOnline', (brokerMessage) => {
+        online.value = brokerMessage.users.map((user: IUser) => user.id);
     });
 });
 
