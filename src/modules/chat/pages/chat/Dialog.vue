@@ -2,10 +2,10 @@
 <template>
     <div class="container dialog" v-if="chat">
         <div class="chat-info">
-            <avatar-icon class="chat-info__avatar" :avatar="chatInfo.avatar" :online="chatInfo.online" />
-            <div class="chat-info__title" >{{ chatInfo.title }}</div>
+            <avatar-icon class="chat-info__avatar" :avatar="chatInfo!.avatar" :online="chatInfo!.online" />
+            <div class="chat-info__title" >{{ chatInfo!.title }}</div>
             <div v-if="typingStatus" class="chat-info__typing" >
-                <div class="text">{{ chatInfo.shortName }} typing</div>
+                <div class="text">{{ chatInfo!.shortName }} typing</div>
                 <div class="typing">
                     <div class="dot"></div>
                     <div class="dot"></div>
@@ -16,7 +16,10 @@
         <div class="dialog-messages">
             <div class="dialog-messages__content" ref="messagesContainer">
                 <div v-for="(message, index) in chat.messages" :key="message.id">
-                    <dialog-message :next="nextAuthor(index)" :message="message"/>
+                    <dialog-message
+                        :next="nextAuthor(index)"
+                        :message="message"
+                    />
                 </div>
             </div>
         </div>

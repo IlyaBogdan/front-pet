@@ -21,7 +21,24 @@ export interface IMessage {
 
     /**
      * Send date
-     * @example '2024-06-08T12:33:51'
      */
-    date: Date | string
+    date: {
+        /**
+         * Date in ISO format
+         * @example '2024-06-08T12:33:51'
+         */
+        date: string,
+
+        /**
+         * Timezone
+         * @example 'UTC'
+         */
+        timezone: string,
+
+        /**
+         * Timezone type
+         * @example 3
+         */
+        timezone_type: number
+    }
 };

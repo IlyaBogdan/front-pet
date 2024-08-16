@@ -1,5 +1,5 @@
 <template>
-    <div class="dialog-message" :class="{ grouped: nextUserIsEqual }" :data-destination="message!.type">
+    <div v-if="message" class="dialog-message" :class="{ grouped: nextUserIsEqual }" :data-destination="message.type">
         <div class="dialog-message__content">
             <div class="text-wrapper" v-html="content"></div>
             <div class="dialog-message__date">{{ messageDate }}</div>
@@ -18,13 +18,16 @@ import { computed, onMounted, ref, defineProps } from 'vue';
 import { TDialogMessageProps } from './props';
 
 const props = defineProps<TDialogMessageProps>();
-const message = ref<IMessageInfo | null>(null);
+const message = ref<IMessageInfo | undefined>(undefined);
 const nextAuthor = ref<IUser | undefined>(props.next);
 const { staticUrl } = useImgMixin();
 
 onMounted(() => {
     const type = nextUserIsEqual.value ? 'out' : 'in';
-    message.value = { ...props.message, type };
+    message.value = {
+        ...props.message,
+        type
+    };
 })
 
 /**
@@ -46,7 +49,8 @@ const content = computed(() => {
  */
 const messageDate = computed(() => {
     // TODO: add timezones
-    const messageDate = new Date(message.value!.date);
+    console.log(message.value);
+    const messageDate = new Date(message.value!.date.date);
     const hours = `${messageDate.getHours()}`.length == 1 ? `0${messageDate.getHours()}` : `${messageDate.getHours()}`;
     const minutes = `${messageDate.getMinutes()}`.length == 1 ? `0${messageDate.getMinutes()}` : `${messageDate.getMinutes()}`;
     return `${hours}:${minutes}`;
@@ -54,7 +58,7 @@ const messageDate = computed(() => {
 
 
 const nextUserIsEqual = computed(() => {
-    return nextAuthor.value && nextAuthor.value.id === message.value!.user!.id;
+    return nextAuthor.value && nextAuthor.value?.id === message.value!.user!.id;
 });
 
 </script>
